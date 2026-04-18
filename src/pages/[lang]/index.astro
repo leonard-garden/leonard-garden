@@ -1,0 +1,35 @@
+---
+import { siteConfig } from '../../site.config';
+
+export function getStaticPaths() {
+	return siteConfig.languages.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const canonicalUrl = new URL(`/${lang}/`, siteConfig.baseUrl).toString();
+---
+
+<html lang={lang}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="canonical" href={canonicalUrl} />
+		{siteConfig.languages.map((l) => (
+			<link rel="alternate" hreflang={l} href={new URL(`/${l}/`, siteConfig.baseUrl).toString()} />
+		))}
+		<link
+			rel="alternate"
+			hreflang="x-default"
+			href={new URL(`/${siteConfig.defaultLang}/`, siteConfig.baseUrl).toString()}
+		/>
+		<title>{siteConfig.name}</title>
+		<meta name="description" content={siteConfig.description} />
+	</head>
+	<body>
+		<main>
+			<h1>{siteConfig.name}</h1>
+			<p>Language: {lang}</p>
+		</main>
+	</body>
+</html>
+
