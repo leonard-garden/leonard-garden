@@ -1,0 +1,309 @@
+---
+import { Fragment } from 'astro/jsx-runtime';
+import { getCollection, getEntry, render } from 'astro:content';
+import { fontStylesheetUrl, siteConfig } from '../../../site.config';
+
+export async function getStaticPaths() {
+	const pillars = await getCollection('pillars');
+
+	return pillars.map((p) => ({
+		params: { locale: p.data.locale, pillar: p.data.pillar },
+	}));
+}
+
+const { locale, pillar } = Astro.params;
+
+const entry = await getEntry('pillars', `${locale}/${pillar}`);
+if (!entry) {
+	return new Response('Not found', { status: 404 });
+}
+
+const { Content } = await render(entry);
+
+const allPillars = await getCollection('pillars');
+const alternateLinks = siteConfig.languages
+	.map((l) => {
+		const sibling = allPillars.find((p) => p.data.pillar === pillar && p.data.locale === l);
+		if (!sibling) return null;
+		return {
+			lang: l,
+			href: new URL(`/${l}/pillars/${pillar}/`, siteConfig.baseUrl).toString(),
+		};
+	})
+	.filter(Boolean) as Array<{ lang: string; href: string }>;
+
+const alternateLinksHtml = alternateLinks
+	.map(
+		({ lang: hrefLang, href }) =>
+			`<link rel="alternate" hreflang="${hrefLang}" href="${href.replace(/"/g, '&quot;')}" />`,
+	)
+	.join('');
+
+const defaultHub = allPillars.find(
+	(p) => p.data.pillar === pillar && p.data.locale === siteConfig.primaryLocale,
+);
+const xDefaultTarget = defaultHub
+	? new URL(`/${siteConfig.primaryLocale}/pillars/${pillar}/`, siteConfig.baseUrl).toString()
+	: new URL(`/${siteConfig.primaryLocale}/`, siteConfig.baseUrl).toString();
+
+const xDefaultAlternateHtml = `<link rel="alternate" hreflang="x-default" href="${xDefaultTarget.replace(/"/g, '&quot;')}" />`;
+
+const articlesInPillar = (
+	await getCollection('articles', (a) => a.data.locale === locale && a.data.pillar === pillar && !a.data.draft)
+).sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const notesInPillar = (
+	await getCollection('notes', (n) => n.data.locale === locale && n.data.pillar === pillar && !n.data.draft)
+).sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+function slugFromId(id: string, l: string) {
+	return id.replace(`${l}/`, '');
+}
+
+const copy =
+	locale === 'vi'
+		? {
+				home: 'Trang chủ',
+				articles: 'Bài viết trong chủ đề',
+				notes: 'Ghi chú trong chủ đề',
+				emptyArticles: 'Chưa có bài viết.',
+				emptyNotes: 'Chưa có ghi chú.',
+			}
+		: {
+				home: 'Home',
+				articles: 'Articles in this topic',
+				notes: 'Notes in this topic',
+				emptyArticles: 'No articles yet.',
+				emptyNotes: 'No notes yet.',
+			};
+
+const canonicalUrl = new URL(`/${locale}/pillars/${pillar}/`, siteConfig.baseUrl).toString();
+
+const canonicalLinkHtml = `<link rel="canonical" href="${canonicalUrl.replace(/"/g, '&quot;')}" />`;
+
+const pageLang = locale;
+
+const escAttr = (s: string) => s.replace(/"/g, '&quot;');
+const fontHeadHtml = [
+	'<link rel="preconnect" href="https://fonts.googleapis.com" />',
+	'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />',
+	`<link rel="stylesheet" href="${escAttr(fontStylesheetUrl)}" />`,
+].join('');
+---
+
+<html lang={pageLang}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<Fragment set:html={canonicalLinkHtml} />
+		<Fragment set:html={alternateLinksHtml} />
+		<Fragment set:html={xDefaultAlternateHtml} />
+		<title>{entry.data.title} · {siteConfig.name}</title>
+		<meta name="description" content={entry.data.description} />
+		<Fragment set:html={fontHeadHtml} />
+		<style>
+			:root {
+				color-scheme: light dark;
+				--bg: #f4f4f5;
+				--fg: #0c0c0d;
+				--muted: #52525b;
+				--border: #d4d4d8;
+				--accent: #2563eb;
+				--accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+				--card: #ffffff;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #09090b;
+					--fg: #fafafa;
+					--muted: #a1a1aa;
+					--border: #27272a;
+					--accent: #60a5fa;
+					--accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+					--card: #121214;
+				}
+			}
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+			}
+			body {
+				margin: 0;
+				font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+				font-size: 1.0625rem;
+				line-height: 1.65;
+				background: var(--bg);
+				color: var(--fg);
+			}
+			.shell {
+				max-width: 46rem;
+				margin: 0 auto;
+				padding: 1.25rem 1.25rem 3rem;
+			}
+			.crumb {
+				font-size: 0.8125rem;
+				margin-bottom: 1.25rem;
+			}
+			.crumb a {
+				color: var(--accent);
+				font-weight: 600;
+				text-decoration: none;
+			}
+			.crumb a:hover {
+				text-decoration: underline;
+			}
+			.crumb a:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+				border-radius: 0.2rem;
+			}
+			.crumb span {
+				color: var(--muted);
+			}
+			.pill {
+				display: inline-block;
+				font-size: 0.65rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+				padding: 0.2rem 0.45rem;
+				border-radius: 0.25rem;
+				background: var(--accent-soft);
+				color: var(--accent);
+				margin-bottom: 0.5rem;
+			}
+			article.intro h1 {
+				font-size: clamp(1.5rem, 4vw, 2rem);
+				font-weight: 800;
+				letter-spacing: -0.03em;
+				margin: 0 0 0.5rem;
+			}
+			article.intro .lead {
+				color: var(--muted);
+				margin: 0 0 1.25rem;
+				font-size: 1rem;
+			}
+			article.intro .prose {
+				margin-top: 1rem;
+			}
+			section.list-block {
+				margin-top: 2.25rem;
+			}
+			section.list-block h2 {
+				font-size: 0.6875rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.14em;
+				color: var(--muted);
+				margin: 0 0 0.75rem;
+			}
+			.card-list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 0.65rem;
+			}
+			.card-list a {
+				display: block;
+				position: relative;
+				padding: 1rem 1.1rem 1rem 1.15rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 0.65rem;
+				text-decoration: none;
+				color: inherit;
+				transition:
+					border-color 0.18s ease,
+					box-shadow 0.18s ease;
+				box-shadow: 0 1px 0 color-mix(in srgb, var(--fg) 4%, transparent);
+			}
+			.card-list a:hover {
+				border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+				box-shadow: 0 8px 24px color-mix(in srgb, var(--fg) 6%, transparent);
+			}
+			.card-list a:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+			}
+			.card-list .title {
+				display: block;
+				font-size: 1.02rem;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+				margin-bottom: 0.25rem;
+			}
+			.card-list .desc {
+				font-size: 0.9rem;
+				color: var(--muted);
+				line-height: 1.5;
+			}
+			.empty {
+				color: var(--muted);
+				font-size: 0.9375rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="shell">
+			<nav class="crumb" aria-label="Breadcrumb">
+				<a href={`/${locale}/`}>{copy.home}</a>
+				<span class="sep"> / </span>
+				<span>{entry.data.title}</span>
+			</nav>
+
+			<article class="intro">
+				<header>
+					<p class="pill">{pillar}</p>
+					<h1>{entry.data.title}</h1>
+					<p class="lead">{entry.data.description}</p>
+				</header>
+				<div class="prose">
+					<Content />
+				</div>
+			</article>
+
+			<section class="list-block" aria-labelledby="pillar-articles">
+				<h2 id="pillar-articles">{copy.articles}</h2>
+				{
+					articlesInPillar.length === 0 ? (
+						<p class="empty">{copy.emptyArticles}</p>
+					) : (
+						<ul class="card-list">
+							{articlesInPillar.map((a) => (
+								<li>
+									<a href={`/${locale}/articles/${slugFromId(a.id, locale)}/`}>
+										<span class="title">{a.data.title}</span>
+										<span class="desc">{a.data.description}</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					)
+				}
+			</section>
+
+			<section class="list-block" aria-labelledby="pillar-notes">
+				<h2 id="pillar-notes">{copy.notes}</h2>
+				{
+					notesInPillar.length === 0 ? (
+						<p class="empty">{copy.emptyNotes}</p>
+					) : (
+						<ul class="card-list">
+							{notesInPillar.map((n) => (
+								<li>
+									<a href={`/${locale}/notes/${slugFromId(n.id, locale)}/`}>
+										<span class="title">{n.data.title}</span>
+										<span class="desc">{n.data.description}</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					)
+				}
+			</section>
+		</div>
+	</body>
+</html>

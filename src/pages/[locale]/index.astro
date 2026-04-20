@@ -1,0 +1,769 @@
+---
+import { Fragment } from 'astro/jsx-runtime';
+import { getCollection } from 'astro:content';
+import { fontStylesheetUrl, siteConfig } from '../../site.config';
+
+export function getStaticPaths() {
+	return siteConfig.languages.map((code) => ({ params: { locale: code } }));
+}
+
+const { locale } = Astro.params;
+
+const copy =
+	locale === 'vi'
+		? {
+				intro:
+					'Ghi chú và bài đào sâu song ngữ (VI/EN) về AI, backend, Kafka và hệ thống ngân hàng.',
+				heroKicker: 'Học · ghi chú · chia sẻ',
+				heroLine: 'Cho người đang học thật, không slide-deck.',
+				pillars: 'Chủ đề',
+				articles: 'Bài viết',
+				notes: 'Ghi chú',
+				langSwitch: 'Ngôn ngữ',
+				emptyPillars: 'Chưa có chủ đề.',
+				emptyArticles: 'Chưa có bài viết.',
+				emptyNotes: 'Chưa có ghi chú.',
+				skipToContent: 'Bỏ qua tới nội dung',
+				ctaExplore: 'Khám phá chủ đề',
+				ctaRead: 'Đọc bài mới nhất',
+				featured: 'Nổi bật',
+				onlyOneArticle: 'Hiện chỉ có một bài ở mục nổi bật — thêm bài sẽ hiện ở đây.',
+				byPillar: 'Theo chủ đề',
+				viewHub: 'Trang chủ đề',
+				miniArticles: 'Bài viết',
+				miniNotes: 'Ghi chú',
+				emptyPillarFeed: 'Chưa có bài hay ghi chú trong chủ đề này.',
+				allArticles: 'Tất cả bài viết',
+				allNotes: 'Tất cả ghi chú',
+			}
+		: {
+				intro: siteConfig.description,
+				heroKicker: 'Learn · notes · ship',
+				heroLine: 'For people actually building, not deck-building.',
+				pillars: 'Topics',
+				articles: 'Articles',
+				notes: 'Notes',
+				langSwitch: 'Language',
+				emptyPillars: 'No topics yet.',
+				emptyArticles: 'No articles yet.',
+				emptyNotes: 'No notes yet.',
+				skipToContent: 'Skip to content',
+				ctaExplore: 'Browse topics',
+				ctaRead: 'Latest article',
+				featured: 'Featured',
+				onlyOneArticle: 'Only one post so far (shown above). More will list here.',
+				byPillar: 'By topic',
+				viewHub: 'Topic hub',
+				miniArticles: 'Articles',
+				miniNotes: 'Notes',
+				emptyPillarFeed: 'No posts in this topic yet.',
+				allArticles: 'All articles',
+				allNotes: 'All notes',
+			};
+
+const canonicalUrl = new URL(`/${locale}/`, siteConfig.baseUrl).toString();
+
+const alternateLinksHtml = siteConfig.languages
+	.map(
+		(l) =>
+			`<link rel="alternate" hreflang="${l}" href="${new URL(`/${l}/`, siteConfig.baseUrl).toString().replace(/"/g, '&quot;')}" />`,
+	)
+	.join('');
+
+const pillarEntries = await getCollection('pillars', (p) => p.data.locale === locale);
+const articleEntries = await getCollection('articles', (a) => a.data.locale === locale && !a.data.draft);
+const noteEntries = await getCollection('notes', (n) => n.data.locale === locale && !n.data.draft);
+
+const sortedPillars = [...pillarEntries].sort((a, b) => a.data.pillar.localeCompare(b.data.pillar));
+const sortedArticles = [...articleEntries].sort(
+	(a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+const sortedNotes = [...noteEntries].sort(
+	(a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+
+function slugFromId(id: string, l: string) {
+	return id.replace(`${l}/`, '');
+}
+
+const firstArticle = sortedArticles[0];
+const firstArticleHref = firstArticle
+	? `/${locale}/articles/${slugFromId(firstArticle.id, locale)}/`
+	: null;
+const articlesAfterFeatured = firstArticle
+	? sortedArticles.filter((a) => a.id !== firstArticle.id)
+	: sortedArticles;
+
+const pillarFeeds = sortedPillars.map((p) => {
+	const pid = p.data.pillar;
+	const arts = sortedArticles
+		.filter((a) => a.data.pillar === pid && (!firstArticle || a.id !== firstArticle.id))
+		.slice(0, 3);
+	const nts = sortedNotes.filter((n) => n.data.pillar === pid).slice(0, 2);
+	return { hub: p, articles: arts, notes: nts };
+});
+---
+
+<html lang={locale}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="canonical" href={canonicalUrl} />
+		<Fragment set:html={alternateLinksHtml} />
+		<link
+			rel="alternate"
+			hrefLang="x-default"
+			href={new URL(`/${siteConfig.primaryLocale}/`, siteConfig.baseUrl).toString()}
+		/>
+		<title>{siteConfig.name}</title>
+		<meta name="description" content={siteConfig.description} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href={fontStylesheetUrl} rel="stylesheet" />
+		<style>
+			:root {
+				color-scheme: light dark;
+				--bg: #f4f4f5;
+				--fg: #0c0c0d;
+				--muted: #52525b;
+				--border: #d4d4d8;
+				--accent: #2563eb;
+				--accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+				--card: #ffffff;
+				--hero-glow: color-mix(in srgb, var(--accent) 18%, transparent);
+				--grid-dot: #d4d4d8;
+				font-synthesis: none;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #09090b;
+					--fg: #fafafa;
+					--muted: #a1a1aa;
+					--border: #27272a;
+					--accent: #60a5fa;
+					--accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+					--card: #121214;
+					--hero-glow: color-mix(in srgb, var(--accent) 22%, transparent);
+					--grid-dot: #3f3f46;
+				}
+			}
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+			}
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				margin: 0;
+				font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+				font-size: 1.0625rem;
+				line-height: 1.6;
+				background-color: var(--bg);
+				color: var(--fg);
+				min-height: 100vh;
+			}
+			/* Layered background: soft glow + subtle dot grid (not generic gradient blobs) */
+			.page-bg {
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				pointer-events: none;
+				background:
+					radial-gradient(ellipse 90% 55% at 50% -15%, var(--hero-glow), transparent 55%),
+					radial-gradient(ellipse 60% 40% at 100% 0%, var(--accent-soft), transparent 45%);
+			}
+			.page-bg::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				opacity: 0.35;
+				background-image: radial-gradient(circle, var(--grid-dot) 0.5px, transparent 0.5px);
+				background-size: 20px 20px;
+				mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
+			}
+			.shell {
+				position: relative;
+				z-index: 1;
+				max-width: 52rem;
+				margin: 0 auto;
+				padding: 1.25rem 1.25rem 4rem;
+			}
+			.skip {
+				position: absolute;
+				left: 1rem;
+				top: 0.75rem;
+				padding: 0.5rem 0.75rem;
+				background: var(--accent);
+				color: #fff;
+				font-size: 0.8125rem;
+				font-weight: 600;
+				text-decoration: none;
+				border-radius: 0.375rem;
+				transform: translateY(-120%);
+				transition: transform 0.2s ease;
+				z-index: 10;
+			}
+			.skip:focus {
+				transform: translateY(0);
+				outline: 2px solid var(--fg);
+				outline-offset: 2px;
+			}
+			.top {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1rem;
+				padding: 0.5rem 0 2rem;
+			}
+			.brand {
+				font-weight: 800;
+				font-size: 1.125rem;
+				letter-spacing: -0.03em;
+				text-decoration: none;
+				color: inherit;
+			}
+			.brand:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 3px;
+				border-radius: 0.25rem;
+			}
+			.lang {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35rem;
+				padding: 0.25rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 999px;
+				font-size: 0.8125rem;
+				font-weight: 600;
+			}
+			.lang a {
+				padding: 0.35rem 0.65rem;
+				border-radius: 999px;
+				text-decoration: none;
+				color: var(--muted);
+				transition:
+					background 0.15s ease,
+					color 0.15s ease;
+			}
+			.lang a:hover {
+				color: var(--fg);
+				background: color-mix(in srgb, var(--fg) 6%, transparent);
+			}
+			.lang a[aria-current='page'] {
+				background: var(--accent-soft);
+				color: var(--accent);
+			}
+			.hero {
+				padding-bottom: 2.75rem;
+				margin-bottom: 0.5rem;
+			}
+			.kicker {
+				display: inline-block;
+				font-size: 0.75rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.12em;
+				color: var(--accent);
+				margin: 0 0 0.75rem;
+			}
+			.hero h1 {
+				font-size: clamp(2rem, 6vw, 2.85rem);
+				font-weight: 800;
+				line-height: 1.1;
+				letter-spacing: -0.035em;
+				margin: 0 0 0.5rem;
+			}
+			.tagline {
+				font-size: 1.125rem;
+				font-weight: 600;
+				color: var(--muted);
+				margin: 0 0 1rem;
+				max-width: 38ch;
+			}
+			.lead {
+				margin: 0 0 1.5rem;
+				max-width: 48ch;
+				color: var(--muted);
+				font-size: 1rem;
+				line-height: 1.65;
+			}
+			.pillar-feed {
+				display: flex;
+				flex-direction: column;
+				gap: 1.75rem;
+			}
+			.pillar-block {
+				padding: 1.25rem 1.1rem;
+				background: color-mix(in srgb, var(--card) 92%, var(--bg));
+				border: 1px solid var(--border);
+				border-radius: 0.75rem;
+			}
+			.pillar-block__top {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-start;
+				justify-content: space-between;
+				gap: 0.75rem;
+				margin-bottom: 1rem;
+			}
+			.pillar-block__top h3 {
+				margin: 0;
+				font-size: 1.15rem;
+				font-weight: 800;
+				letter-spacing: -0.02em;
+			}
+			.pillar-block__name {
+				display: block;
+				margin-top: 0.35rem;
+				font-weight: 800;
+			}
+			.pillar-block__top .pill {
+				margin-bottom: 0;
+			}
+			.muted-dash {
+				margin: 0;
+				padding: 0.25rem 0;
+				color: var(--muted);
+				font-size: 0.875rem;
+			}
+			.pillar-block__top a.hub {
+				font-size: 0.8125rem;
+				font-weight: 600;
+				color: var(--accent);
+				text-decoration: none;
+				white-space: nowrap;
+			}
+			.pillar-block__top a.hub:hover {
+				text-decoration: underline;
+			}
+			.pillar-block__top a.hub:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+				border-radius: 0.25rem;
+			}
+			.pillar-block__cols {
+				display: grid;
+				gap: 1.25rem;
+			}
+			@media (min-width: 560px) {
+				.pillar-block__cols {
+					grid-template-columns: 1fr 1fr;
+				}
+			}
+			.pillar-block__cols h4 {
+				margin: 0 0 0.5rem;
+				font-size: 0.65rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+				color: var(--muted);
+			}
+			.pillar-block .card-list {
+				gap: 0.45rem;
+			}
+			.pillar-block .card-list a {
+				padding: 0.65rem 0.75rem 0.65rem 0.85rem;
+				font-size: 0.92rem;
+			}
+			.pillar-block .card-list .title {
+				font-size: 0.94rem;
+			}
+			.pillar-block .card-list .desc {
+				font-size: 0.82rem;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+			.cta-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.75rem;
+			}
+			.cta {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				min-height: 44px;
+				padding: 0.65rem 1.15rem;
+				font-size: 0.9375rem;
+				font-weight: 600;
+				font-family: inherit;
+				text-decoration: none;
+				border-radius: 0.5rem;
+				transition:
+					transform 0.15s ease,
+					box-shadow 0.15s ease;
+			}
+			.cta:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 3px;
+			}
+			.cta--primary {
+				background: var(--accent);
+				color: #fff;
+				box-shadow: 0 1px 0 color-mix(in srgb, #000 12%, transparent);
+			}
+			.cta--primary:hover {
+				filter: brightness(1.06);
+			}
+			.cta--ghost {
+				background: var(--card);
+				color: var(--fg);
+				border: 1px solid var(--border);
+			}
+			.cta--ghost:hover {
+				border-color: var(--accent);
+				color: var(--accent);
+			}
+			.cta--disabled {
+				opacity: 0.45;
+				pointer-events: none;
+			}
+			main {
+				display: flex;
+				flex-direction: column;
+				gap: 2.75rem;
+			}
+			.section-head {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 1rem;
+				margin-bottom: 1rem;
+			}
+			.section-head h2 {
+				font-size: 0.6875rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.14em;
+				color: var(--muted);
+				margin: 0;
+			}
+			.card-list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 0.65rem;
+			}
+			.card-list a {
+				display: block;
+				position: relative;
+				padding: 1rem 1.1rem 1rem 1.15rem;
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 0.65rem;
+				text-decoration: none;
+				color: inherit;
+				transition:
+					border-color 0.18s ease,
+					box-shadow 0.18s ease,
+					transform 0.18s ease;
+				box-shadow: 0 1px 0 color-mix(in srgb, var(--fg) 4%, transparent);
+			}
+			.card-list a::before {
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 0.65rem;
+				bottom: 0.65rem;
+				width: 3px;
+				border-radius: 999px;
+				background: var(--accent);
+				opacity: 0;
+				transition: opacity 0.18s ease;
+			}
+			.card-list a:hover {
+				border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+				box-shadow: 0 8px 24px color-mix(in srgb, var(--fg) 6%, transparent);
+				transform: translateY(-1px);
+			}
+			.card-list a:hover::before {
+				opacity: 1;
+			}
+			.card-list a:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+			}
+			.card-list .title {
+				display: block;
+				font-size: 1.02rem;
+				font-weight: 700;
+				letter-spacing: -0.02em;
+				margin-bottom: 0.25rem;
+			}
+			.card-list .desc {
+				font-size: 0.9rem;
+				color: var(--muted);
+				line-height: 1.5;
+			}
+			.pill {
+				display: inline-block;
+				font-size: 0.65rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+				padding: 0.2rem 0.45rem;
+				border-radius: 0.25rem;
+				background: var(--accent-soft);
+				color: var(--accent);
+				margin-bottom: 0.4rem;
+			}
+			.featured {
+				padding: 1.25rem;
+				border-radius: 0.75rem;
+				border: 1px solid var(--border);
+				background: linear-gradient(
+					135deg,
+					color-mix(in srgb, var(--card) 100%, transparent),
+					color-mix(in srgb, var(--accent) 5%, var(--card))
+				);
+			}
+			.featured a {
+				box-shadow: none;
+			}
+			.featured a:hover {
+				transform: none;
+			}
+			.empty {
+				color: var(--muted);
+				font-size: 0.9375rem;
+				padding: 1rem 0;
+			}
+			.empty-zero {
+				margin: 0;
+				padding: 0.5rem 0 0;
+			}
+			.foot {
+				margin-top: 3.5rem;
+				padding-top: 1.5rem;
+				border-top: 1px solid var(--border);
+				font-size: 0.8125rem;
+				color: var(--muted);
+			}
+			@media (prefers-reduced-motion: reduce) {
+				html {
+					scroll-behavior: auto;
+				}
+				.card-list a,
+				.cta {
+					transition: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-bg" aria-hidden="true"></div>
+		<div class="shell">
+			<a class="skip" href="#main-content">{copy.skipToContent}</a>
+
+			<header class="top">
+				<a class="brand" href={`/${locale}/`}>{siteConfig.name}</a>
+				<nav class="lang" aria-label={copy.langSwitch}>
+					{siteConfig.languages.map((l) => (
+						<a href={`/${l}/`} aria-current={l === locale ? 'page' : undefined}>
+							{l}
+						</a>
+					))}
+				</nav>
+			</header>
+
+			<section class="hero" aria-labelledby="hero-title">
+				<p class="kicker">{copy.heroKicker}</p>
+				<h1 id="hero-title">{siteConfig.name}</h1>
+				<p class="tagline">{copy.heroLine}</p>
+				<p class="lead">{copy.intro}</p>
+				<div class="cta-row">
+					<a class="cta cta--primary" href="#by-pillar">
+						{copy.ctaExplore}
+					</a>
+					{
+						firstArticleHref ? (
+							<a class="cta cta--ghost" href={firstArticleHref}>
+								{copy.ctaRead}
+							</a>
+						) : (
+							<span class="cta cta--ghost cta--disabled" aria-disabled="true">
+								{copy.ctaRead}
+							</span>
+						)
+					}
+				</div>
+			</section>
+
+			<main id="main-content">
+				{
+					firstArticle && (
+						<section aria-labelledby="featured-heading">
+							<div class="section-head">
+								<h2 id="featured-heading">{copy.featured}</h2>
+							</div>
+							<div class="featured">
+								<ul class="card-list">
+									<li>
+										<a href={firstArticleHref}>
+											<span class="pill">{firstArticle.data.pillar}</span>
+											<span class="title">{firstArticle.data.title}</span>
+											<span class="desc">{firstArticle.data.description}</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</section>
+					)
+				}
+
+				<section id="topics" aria-labelledby="pillars-heading">
+					<div class="section-head">
+						<h2 id="pillars-heading">{copy.pillars}</h2>
+					</div>
+					{
+						sortedPillars.length === 0 ? (
+							<p class="empty">{copy.emptyPillars}</p>
+						) : (
+							<ul class="card-list">
+								{sortedPillars.map((p) => (
+									<li>
+										<a href={`/${locale}/pillars/${p.data.pillar}/`}>
+											<span class="pill">{p.data.pillar}</span>
+											<span class="title">{p.data.title}</span>
+											<span class="desc">{p.data.description}</span>
+										</a>
+									</li>
+								))}
+							</ul>
+						)
+					}
+				</section>
+
+				<section id="by-pillar" aria-labelledby="by-pillar-heading">
+					<div class="section-head">
+						<h2 id="by-pillar-heading">{copy.byPillar}</h2>
+					</div>
+					{
+						sortedPillars.length === 0 ? (
+							<p class="empty">{copy.emptyPillars}</p>
+						) : (
+							<div class="pillar-feed">
+								{pillarFeeds.map(({ hub, articles: pa, notes: pn }) => {
+									const hubHref = `/${locale}/pillars/${hub.data.pillar}/`;
+									const hasFeed = pa.length > 0 || pn.length > 0;
+									return (
+										<div class="pillar-block">
+											<div class="pillar-block__top">
+												<h3 id={`pillar-${hub.data.pillar}`}>
+													<span class="pill">{hub.data.pillar}</span>
+													<span class="pillar-block__name">{hub.data.title}</span>
+												</h3>
+												<a class="hub" href={hubHref}>
+													{copy.viewHub} →
+												</a>
+											</div>
+											{!hasFeed ? (
+												<p class="empty empty-zero">{copy.emptyPillarFeed}</p>
+											) : (
+												<div class="pillar-block__cols">
+													<div>
+														<h4>{copy.miniArticles}</h4>
+														{pa.length === 0 ? (
+															<p class="muted-dash">—</p>
+														) : (
+															<ul class="card-list">
+																{pa.map((a) => (
+																	<li>
+																		<a href={`/${locale}/articles/${slugFromId(a.id, locale)}/`}>
+																			<span class="title">{a.data.title}</span>
+																			<span class="desc">{a.data.description}</span>
+																		</a>
+																	</li>
+																))}
+															</ul>
+														)}
+													</div>
+													<div>
+														<h4>{copy.miniNotes}</h4>
+														{pn.length === 0 ? (
+															<p class="muted-dash">—</p>
+														) : (
+															<ul class="card-list">
+																{pn.map((n) => (
+																	<li>
+																		<a href={`/${locale}/notes/${slugFromId(n.id, locale)}/`}>
+																			<span class="title">{n.data.title}</span>
+																			<span class="desc">{n.data.description}</span>
+																		</a>
+																	</li>
+																))}
+															</ul>
+														)}
+													</div>
+												</div>
+											)}
+										</div>
+									);
+								})}
+							</div>
+						)
+					}
+				</section>
+
+				<section id="articles" aria-labelledby="articles-heading">
+					<div class="section-head">
+						<h2 id="articles-heading">{copy.allArticles}</h2>
+					</div>
+					{
+						sortedArticles.length === 0 ? (
+							<p class="empty">{copy.emptyArticles}</p>
+						) : articlesAfterFeatured.length === 0 ? (
+							<p class="empty">{copy.onlyOneArticle}</p>
+						) : (
+							<ul class="card-list">
+								{articlesAfterFeatured.map((a) => (
+									<li>
+										<a href={`/${locale}/articles/${slugFromId(a.id, locale)}/`}>
+											<span class="title">{a.data.title}</span>
+											<span class="desc">{a.data.description}</span>
+										</a>
+									</li>
+								))}
+							</ul>
+						)
+					}
+				</section>
+
+				<section id="notes" aria-labelledby="notes-heading">
+					<div class="section-head">
+						<h2 id="notes-heading">{copy.allNotes}</h2>
+					</div>
+					{
+						sortedNotes.length === 0 ? (
+							<p class="empty">{copy.emptyNotes}</p>
+						) : (
+							<ul class="card-list">
+								{sortedNotes.map((n) => (
+									<li>
+										<a href={`/${locale}/notes/${slugFromId(n.id, locale)}/`}>
+											<span class="title">{n.data.title}</span>
+											<span class="desc">{n.data.description}</span>
+										</a>
+									</li>
+								))}
+							</ul>
+						)
+					}
+				</section>
+			</main>
+
+			<footer class="foot">
+				© {new Date().getFullYear()} {siteConfig.name} · {copy.langSwitch}: {locale.toUpperCase()}
+			</footer>
+		</div>
+	</body>
+</html>

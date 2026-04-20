@@ -1,0 +1,24 @@
+---
+description: Learning Hub — design system, Gen Z minimal UI, SEO HTML (read DESIGN.md)
+alwaysApply: true
+---
+
+# Learning Hub — design & SEO
+
+Before changing **layout, typography, colors, or page structure**, read **`DESIGN.md`** in the repo root and follow it.
+
+## Must follow
+
+- **Visual**: Gen Z–adjacent = **minimal, scannable, one accent** (`--accent` in `DESIGN.md`); generous spacing; no decorative clutter. Support **light + dark** via `prefers-color-scheme` and tokens.
+- **Typography**: body **≥16px**, comfortable line-height, **max-width ~65–75ch** for long prose.
+- **SEO HTML**: **one `h1` per page**; logical `h2` → `h3`; use **`main`**, **`nav`**, **`article`** when appropriate; **`lang`** on `<html>` matches route.
+- **Astro**: in JSX-style tags use **`hrefLang`** on `<link>` (not `hreflang`); avoid **nested backticks** inside `{expression}` in templates — compute URLs in frontmatter.
+- **Links & a11y**: visible **`:focus-visible`**; meaningful **`alt`** on images.
+
+## Do not
+
+- Generic “AI slop” (purple gradients, random blobs) unless specified.
+- Fake headings (`<p>` styled as titles).
+- Body text smaller than ~14px on mobile for primary content.
+
+When in doubt, align new pages with **`src/pages/[lang]/index.astro`** patterns and tokens until a shared `global.css` exists.

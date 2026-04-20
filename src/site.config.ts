@@ -1,10 +1,15 @@
+/** Google Fonts CSS URL kept out of `.astro` markup so `..` in `wght@0,400..800` does not break the parser. Name avoids `href` substring — esbuild can misparse `href={…}` when the identifier ends with `href`. */
+export const fontStylesheetUrl =
+	'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&display=swap';
+
 export const siteConfig = {
 	name: 'Learning Hub',
 	description:
 		'Bilingual (VI/EN) notes and deep dives on AI tools, backend engineering, Kafka, and banking systems.',
 	baseUrl: 'https://example.com',
 	languages: ['vi', 'en'] as const,
-	defaultLang: 'vi' as const,
+	/** Default locale for redirects and `x-default` hreflang. Renamed from `defaultLang` — esbuild mis-parses `<html lang>` in the same file when `defaultLang` appears in expressions. */
+	primaryLocale: 'vi' as const,
 	social: {
 		github: 'https://github.com/your-handle',
 	},

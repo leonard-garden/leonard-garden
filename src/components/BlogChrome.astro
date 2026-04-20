@@ -1,0 +1,123 @@
+---
+import { Fragment } from 'astro/jsx-runtime';
+import '../styles/blog-document.css';
+import { siteConfig } from '../site.config';
+
+export interface LangLink {
+	code: string;
+	href: string;
+	current: boolean;
+}
+
+interface Props {
+	/** Route language (avoid prop name `locale` — JSX tooling can misparse `locale={locale}`). */
+	siteLocale: 'vi' | 'en';
+	title: string;
+	description: string;
+	docKind: 'article' | 'note';
+	publishedAt: Date;
+	readingTimeMinutes?: number;
+	pillar?: string;
+	navLinks: LangLink[];
+}
+
+const {
+	siteLocale: routeLocale,
+	title,
+	description,
+	docKind,
+	publishedAt,
+	readingTimeMinutes,
+	pillar,
+	navLinks,
+} = Astro.props;
+
+const copy =
+	routeLocale === 'vi'
+		? {
+				skipToContent: 'Bỏ qua tới nội dung',
+				navLabel: 'Ngôn ngữ',
+				home: 'Trang chủ',
+				articles: 'Bài viết',
+				notes: 'Ghi chú',
+				breadcrumb: 'Đường dẫn',
+				readMinutes: (n: number) => `${n} phút đọc`,
+				pillarHub: 'Chủ đề',
+			}
+		: {
+				skipToContent: 'Skip to content',
+				navLabel: 'Language',
+				home: 'Home',
+				articles: 'Articles',
+				notes: 'Notes',
+				breadcrumb: 'Breadcrumb',
+				readMinutes: (n: number) => `${n} min read`,
+				pillarHub: 'Topic',
+			};
+
+const dateLocale = routeLocale === 'vi' ? 'vi-VN' : 'en-US';
+const dateLabel = publishedAt.toLocaleDateString(dateLocale, {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+const isoDate = publishedAt.toISOString().slice(0, 10);
+
+const sectionId = docKind === 'article' ? 'articles' : 'notes';
+const sectionLabel = docKind === 'article' ? copy.articles : copy.notes;
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const navLinksHtml = navLinks
+	.map((item) => {
+		const cur = item.current ? ' aria-current="page"' : '';
+		return `<a href="${esc(item.href)}"${cur}>${esc(item.code)}</a>`;
+	})
+	.join('');
+
+const pillarPath = pillar ? `/${routeLocale}/pillars/${pillar}/` : '';
+const pillarHtml = pillar
+	? `<p class="pill"><a href="${esc(pillarPath)}">${esc(pillar)}</a></p>`
+	: '';
+
+const readingTimeHtml =
+	readingTimeMinutes != null
+		? `<span>${esc(copy.readMinutes(readingTimeMinutes))}</span>`
+		: '';
+---
+
+<div class="page-bg" aria-hidden="true"></div>
+<div class="shell">
+	<a class="skip" href="#main-content">{copy.skipToContent}</a>
+
+	<header class="top">
+		<a class="brand" href={`/${routeLocale}/`}>{siteConfig.name}</a>
+		<nav class="locale-switch" aria-label={copy.navLabel} set:html={navLinksHtml} />
+	</header>
+
+	<nav class="crumb" aria-label={copy.breadcrumb}>
+		<a href={`/${routeLocale}/`}>{copy.home}</a>
+		<span class="sep">/</span>
+		<a href={`/${routeLocale}/#${sectionId}`}>{sectionLabel}</a>
+		<span class="sep">/</span>
+		<span style="color: var(--fg); font-weight: 600;">{title}</span>
+	</nav>
+
+	<header class="doc-header">
+		<Fragment set:html={pillarHtml} />
+		<h1>{title}</h1>
+		<p class="lede">{description}</p>
+		<div class="doc-meta">
+			<time datetime={isoDate}>{dateLabel}</time>
+			<Fragment set:html={readingTimeHtml} />
+		</div>
+	</header>
+
+	<main id="main-content" class="prose">
+		<slot />
+	</main>
+
+	<footer class="foot">
+		© {new Date().getFullYear()}
+		{siteConfig.name} · {copy.navLabel}: {routeLocale.toUpperCase()}
+	</footer>
+</div>
