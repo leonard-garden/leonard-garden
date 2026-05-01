@@ -6,7 +6,7 @@ export const siteConfig = {
 	name: 'Learning Hub',
 	description:
 		'Bilingual (VI/EN) notes and deep dives on AI tools, backend engineering, Kafka, and banking systems.',
-	baseUrl: 'https://example.com',
+	baseUrl: 'https://leonard.garden',
 	languages: ['vi', 'en'] as const,
 	/** Default locale for redirects and `x-default` hreflang. Renamed from `defaultLang` — esbuild mis-parses `<html lang>` in the same file when `defaultLang` appears in expressions. */
 	primaryLocale: 'vi' as const,
