@@ -1,0 +1,41 @@
+---
+import { buildFontHeadHtml } from '../lib/seo';
+import { fontStylesheetUrl } from '../site.config';
+
+interface Props {
+	title: string;
+	description: string;
+	/** Pre-built `<link rel="canonical">` HTML — use buildCanonicalHtml() from seo.ts. */
+	canonicalHtml: string;
+	/** Pre-built `<link rel="alternate">` HTML strings including x-default — use buildAlternateLinksHtml() from seo.ts. */
+	alternateHtml: string;
+	/** Open Graph type. Defaults to "website". */
+	ogType?: 'website' | 'article';
+	/** When true, adds <meta name="robots" content="noindex">. Use for non-indexable notes. */
+	noindex?: boolean;
+}
+
+const {
+	title,
+	description,
+	canonicalHtml,
+	alternateHtml,
+	ogType = 'website',
+	noindex = false,
+} = Astro.props;
+
+const fontHeadHtml = buildFontHeadHtml(fontStylesheetUrl);
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+{noindex && <meta name="robots" content="noindex" />}
+<Fragment set:html={canonicalHtml} />
+<Fragment set:html={alternateHtml} />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={ogType} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+<Fragment set:html={fontHeadHtml} />
