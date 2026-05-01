@@ -1,8 +1,9 @@
 ---
-import { Fragment } from 'astro/jsx-runtime';
 import { getCollection, getEntry, render } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
 import BlogChrome from '../../../components/BlogChrome.astro';
-import { fontStylesheetUrl, siteConfig } from '../../../site.config';
+import { buildAlternateLinksHtml, buildCanonicalHtml } from '../../../lib/seo';
+import { siteConfig } from '../../../site.config';
 
 export async function getStaticPaths() {
 	const articles = await getCollection('articles', (a) => !a.data.draft);
@@ -19,33 +20,38 @@ if (!entry) {
 }
 
 const allArticles = await getCollection('articles', (a) => !a.data.draft);
-const alternates = siteConfig.languages
+
+const alternateItems = siteConfig.languages
 	.map((l) => {
 		const sibling = allArticles.find(
 			(a) => a.data.translationKey === entry.data.translationKey && a.data.locale === l,
 		);
 		if (!sibling) return null;
-		const siblingSlug = sibling.id.replace(`${l}/`, '');
 		return {
 			localeCode: l,
-			href: new URL(`/${l}/articles/${siblingSlug}/`, siteConfig.baseUrl).toString(),
+			href: new URL(`/${l}/articles/${sibling.id.replace(`${l}/`, '')}/`, siteConfig.baseUrl).toString(),
 		};
 	})
-	.filter(Boolean);
-
-const alternateLinks = alternates as Array<{ localeCode: string; href: string }>;
+	.filter((x): x is { localeCode: string; href: string } => x !== null);
 
 const defaultSibling =
 	allArticles.find(
-		(a) => a.data.translationKey === entry.data.translationKey && a.data.locale === siteConfig.primaryLocale,
+		(a) =>
+			a.data.translationKey === entry.data.translationKey &&
+			a.data.locale === siteConfig.primaryLocale,
 	) ?? entry;
 
-const canonicalUrl =
-	(entry.data.canonicalUrl ??
-		new URL(`/${locale}/articles/${entry.id.replace(`${locale}/`, '')}/`, siteConfig.baseUrl)).toString();
+const xDefaultHref = new URL(
+	`/${siteConfig.primaryLocale}/articles/${defaultSibling.id.replace(`${siteConfig.primaryLocale}/`, '')}/`,
+	siteConfig.baseUrl,
+).toString();
 
-const xDefaultPath = `/${siteConfig.primaryLocale}/articles/${defaultSibling.id.replace(`${siteConfig.primaryLocale}/`, '')}/`;
-const xDefaultHref = new URL(xDefaultPath, siteConfig.baseUrl).toString();
+const canonicalUrl =
+	entry.data.canonicalUrl ??
+	new URL(`/${locale}/articles/${entry.id.replace(`${locale}/`, '')}/`, siteConfig.baseUrl).toString();
+
+const canonicalHtml = buildCanonicalHtml(canonicalUrl);
+const alternateHtml = buildAlternateLinksHtml(alternateItems, xDefaultHref);
 
 const { Content: Cmp } = await render(entry);
 
@@ -53,49 +59,30 @@ const navLinks = siteConfig.languages.map((l) => {
 	const sibling = allArticles.find(
 		(a) => a.data.translationKey === entry.data.translationKey && a.data.locale === l,
 	);
-	const href = sibling
-		? `/${l}/articles/${sibling.id.replace(`${l}/`, '')}/`
-		: `/${l}/`;
-	return { code: l, href, current: l === locale };
+	return {
+		code: l,
+		href: sibling ? `/${l}/articles/${sibling.id.replace(`${l}/`, '')}/` : `/${l}/`,
+		current: l === locale,
+	};
 });
 
-const routeLocale = locale;
-/** Must not write `docKind="article"` — esbuild can parse `article` as a JSX tag. */
+/** Must not write docKind="article" inline — esbuild can parse `article` as a JSX tag. */
 const dkA = 'article' as const;
-
-const escAttr = (s: string) => s.replace(/"/g, '&quot;');
-const alternateLinksHtml = alternateLinks
-	.map(
-		({ localeCode, href }) =>
-			`<link rel="alternate" hreflang="${escAttr(localeCode)}" href="${escAttr(href)}" />`,
-	)
-	.join('');
-
-const xDefaultAlternateHtml = `<link rel="alternate" hreflang="x-default" href="${escAttr(xDefaultHref)}" />`;
-
-const canonicalLinkHtml = `<link rel="canonical" href="${escAttr(canonicalUrl)}" />`;
-
-const fontHeadHtml = [
-	'<link rel="preconnect" href="https://fonts.googleapis.com" />',
-	'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />',
-	`<link rel="stylesheet" href="${escAttr(fontStylesheetUrl)}" />`,
-].join('');
 ---
 
-<html lang={routeLocale}>
+<html lang={locale}>
 	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<Fragment set:html={canonicalLinkHtml} />
-		<Fragment set:html={alternateLinksHtml} />
-		<Fragment set:html={xDefaultAlternateHtml} />
-		<title>{entry.data.title}</title>
-		<meta name="description" content={entry.data.description} />
-		<Fragment set:html={fontHeadHtml} />
+		<BaseHead
+			title={entry.data.title}
+			description={entry.data.description}
+			canonicalHtml={canonicalHtml}
+			alternateHtml={alternateHtml}
+			ogType={dkA}
+		/>
 	</head>
 	<body class="blog-doc">
 		<BlogChrome
-			siteLocale={routeLocale}
+			siteLocale={locale}
 			title={entry.data.title}
 			description={entry.data.description}
 			docKind={dkA}
