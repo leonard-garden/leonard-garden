@@ -14,63 +14,74 @@ const { locale } = Astro.params;
 const copy =
 	locale === 'vi'
 		? {
-				intro:
-					'Ghi chú và bài đào sâu song ngữ (VI/EN) về AI, backend, Kafka và hệ thống ngân hàng.',
-				heroKicker: 'Học · ghi chú · chia sẻ',
-				heroLine: 'Cho người đang học thật, không slide-deck.',
-				pillars: 'Chủ đề',
-				articles: 'Bài viết',
-				notes: 'Ghi chú',
-				langSwitch: 'Ngôn ngữ',
-				emptyPillars: 'Chưa có chủ đề.',
-				emptyArticles: 'Chưa có bài viết.',
-				emptyNotes: 'Chưa có ghi chú.',
+				volume: 'leonard.garden / vol. iv / no. 02',
+				heroTagline: 'A bilingual learning hub by Leonard.',
+				heroLead:
+					'Mình là backend engineer làm việc với hệ thống ngân hàng và streaming. Viết ở đây để suy nghĩ rõ ràng — ghi chú ngắn khi ý tưởng còn rough, bài dài hơn khi đã đào sâu.',
+				ctaLatest: 'Đọc bài mới nhất →',
+				ctaTopics: 'Xem chủ đề',
+				now: 'Hiện tại · Th04 2026',
+				nowLines: [
+					'Đang đọc Designing Data-Intensive Applications, ch. 11.',
+					'Đang viết về idempotency contract ở edge.',
+					'Demo: dựng lại Kafka exactly-once.',
+				],
+				statsTpl: (a: number, n: number) => `4 chủ đề · ${a} bài · ${n} ghi chú`,
+				feedHead: 'Mới đây',
+				searchPlaceholder: 'Tìm trong vườn…',
+				tabAll: 'tất cả',
+				tabArticles: 'bài viết',
+				tabNotes: 'ghi chú',
+				tabPillar: 'theo chủ đề',
+				typeArticle: 'article',
+				typeNote: 'note',
+				topicsHead: 'Chủ đề',
+				viewHub: 'trang chủ đề',
+				emptyFeed: 'Chưa có bài viết nào.',
+				emptyTopic: 'Chưa có bài trong chủ đề này.',
 				skipToContent: 'Bỏ qua tới nội dung',
-				ctaExplore: 'Khám phá chủ đề',
-				ctaRead: 'Đọc bài mới nhất',
-				featured: 'Nổi bật',
-				onlyOneArticle: 'Hiện chỉ có một bài ở mục nổi bật — thêm bài sẽ hiện ở đây.',
-				byPillar: 'Theo chủ đề',
-				viewHub: 'Trang chủ đề',
-				miniArticles: 'Bài viết',
-				miniNotes: 'Ghi chú',
-				emptyPillarFeed: 'Chưa có bài hay ghi chú trong chủ đề này.',
-				allArticles: 'Tất cả bài viết',
-				allNotes: 'Tất cả ghi chú',
+				colophon: '© 2026 leonard.garden · set in Source Serif 4 + Plus Jakarta Sans',
+				min: 'min',
+				ord: 'số',
 			}
 		: {
-				intro: siteConfig.description,
-				heroKicker: 'Learn · notes · ship',
-				heroLine: 'For people actually building, not deck-building.',
-				pillars: 'Topics',
-				articles: 'Articles',
-				notes: 'Notes',
-				langSwitch: 'Language',
-				emptyPillars: 'No topics yet.',
-				emptyArticles: 'No articles yet.',
-				emptyNotes: 'No notes yet.',
+				volume: 'leonard.garden / vol. iv / no. 02',
+				heroTagline: 'A bilingual learning hub by Leonard.',
+				heroLead:
+					"I’m a backend engineer working on banking and streaming systems. I write here to think clearly — short notes when an idea is still rough, longer pieces when it has settled.",
+				ctaLatest: 'Read the latest →',
+				ctaTopics: 'Browse topics',
+				now: 'Currently · Apr 2026',
+				nowLines: [
+					'Reading Designing Data-Intensive Applications, ch. 11.',
+					'Writing about idempotency contracts at the edge.',
+					'Hands-on: rebuilding a Kafka exactly-once demo.',
+				],
+				statsTpl: (a: number, n: number) => `4 pillars · ${a} articles · ${n} notes`,
+				feedHead: 'Recently',
+				searchPlaceholder: 'Search the garden…',
+				tabAll: 'all',
+				tabArticles: 'articles',
+				tabNotes: 'notes',
+				tabPillar: 'by pillar',
+				typeArticle: 'article',
+				typeNote: 'note',
+				topicsHead: 'Topics',
+				viewHub: 'topic hub',
+				emptyFeed: 'No posts yet.',
+				emptyTopic: 'Nothing here yet.',
 				skipToContent: 'Skip to content',
-				ctaExplore: 'Browse topics',
-				ctaRead: 'Latest article',
-				featured: 'Featured',
-				onlyOneArticle: 'Only one post so far (shown above). More will list here.',
-				byPillar: 'By topic',
-				viewHub: 'Topic hub',
-				miniArticles: 'Articles',
-				miniNotes: 'Notes',
-				emptyPillarFeed: 'No posts in this topic yet.',
-				allArticles: 'All articles',
-				allNotes: 'All notes',
+				colophon: '© 2026 leonard.garden · set in Source Serif 4 + Plus Jakarta Sans',
+				min: 'min',
+				ord: 'no.',
 			};
 
 const canonicalUrl = new URL(`/${locale}/`, siteConfig.baseUrl).toString();
-
 const alternateItems = siteConfig.languages.map((l) => ({
 	localeCode: l,
 	href: new URL(`/${l}/`, siteConfig.baseUrl).toString(),
 }));
 const xDefaultHref = new URL(`/${siteConfig.primaryLocale}/`, siteConfig.baseUrl).toString();
-
 const canonicalHtml = buildCanonicalHtml(canonicalUrl);
 const alternateHtml = buildAlternateLinksHtml(alternateItems, xDefaultHref);
 
@@ -90,25 +101,56 @@ function slugFromId(id: string, l: string) {
 	return id.replace(`${l}/`, '');
 }
 
-const firstArticle = sortedArticles[0];
-const firstArticleHref = firstArticle
-	? `/${locale}/articles/${slugFromId(firstArticle.id, locale)}/`
-	: null;
-const articlesAfterFeatured = firstArticle
-	? sortedArticles.filter((a) => a.id !== firstArticle.id)
-	: sortedArticles;
+// Combined feed (articles + notes interleaved by date)
+type FeedRow = {
+	type: 'article' | 'note';
+	pillar: string;
+	href: string;
+	title: string;
+	description: string;
+	date: Date;
+	mins?: number;
+};
 
-const pillarFeeds = sortedPillars.map((p) => {
-	const pid = p.data.pillar;
-	const arts = sortedArticles
-		.filter((a) => a.data.pillar === pid && (!firstArticle || a.id !== firstArticle.id))
-		.slice(0, 3);
-	const nts = sortedNotes.filter((n) => n.data.pillar === pid).slice(0, 2);
-	return { hub: p, articles: arts, notes: nts };
-});
+const feed: FeedRow[] = [
+	...sortedArticles.map((a) => ({
+		type: 'article' as const,
+		pillar: a.data.pillar,
+		href: `/${locale}/articles/${slugFromId(a.id, locale)}/`,
+		title: a.data.title,
+		description: a.data.description,
+		date: a.data.publishedAt,
+		mins: a.data.readingTimeMinutes,
+	})),
+	...sortedNotes.map((n) => ({
+		type: 'note' as const,
+		pillar: n.data.pillar,
+		href: `/${locale}/notes/${slugFromId(n.id, locale)}/`,
+		title: n.data.title,
+		description: n.data.description,
+		date: n.data.publishedAt,
+	})),
+].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+function fmtDate(d: Date) {
+	const y = d.getFullYear();
+	const m = String(d.getMonth() + 1).padStart(2, '0');
+	const day = String(d.getDate()).padStart(2, '0');
+	return `${y}·${m}·${day}`;
+}
+
+function pad(n: number, width = 3) {
+	return String(n).padStart(width, '0');
+}
+
+const articleCount = sortedArticles.length;
+const noteCount = sortedNotes.length;
+
+// First-paint feed: render "all" server-side; client JS swaps on tab change.
+const initialFeed = feed;
 ---
 
-<html lang={locale}>
+<html lang={locale} data-theme="light">
 	<head>
 		<BaseHead
 			title={siteConfig.name}
@@ -117,211 +159,183 @@ const pillarFeeds = sortedPillars.map((p) => {
 			alternateHtml={alternateHtml}
 		/>
 	</head>
-	<body>
-		<div class="page-bg" aria-hidden="true"></div>
-		<div class="shell">
-			<a class="skip" href="#main-content">{copy.skipToContent}</a>
+	<body class="lg-page">
+		<a class="skip" href="#feed">{copy.skipToContent}</a>
 
-			<header class="top">
-				<a class="brand" href={`/${locale}/`}>{siteConfig.name}</a>
-				<nav class="lang" aria-label={copy.langSwitch}>
+		<article class="va">
+			<header class="va__masthead">
+				<a href={`/${locale}/`} style="text-decoration:none;color:inherit;">{copy.volume}</a>
+				<nav aria-label="Site">
+					<a href="#feed">feed</a>
+					<a href="#topics">topics</a>
+					<a href="#now">now</a>
 					{siteConfig.languages.map((l) => (
-						<a href={`/${l}/`} aria-current={l === locale ? 'page' : undefined}>
-							{l}
-						</a>
+						<a href={`/${l}/`} aria-current={l === locale ? 'page' : undefined}>{l.toUpperCase()}</a>
 					))}
 				</nav>
 			</header>
 
-			<section class="hero" aria-labelledby="hero-title">
-				<p class="kicker">{copy.heroKicker}</p>
-				<h1 id="hero-title">{siteConfig.name}</h1>
-				<p class="tagline">{copy.heroLine}</p>
-				<p class="lead">{copy.intro}</p>
-				<div class="cta-row">
-					<a class="cta cta--primary" href="#by-pillar">
-						{copy.ctaExplore}
-					</a>
-					{
-						firstArticleHref ? (
-							<a class="cta cta--ghost" href={firstArticleHref}>
-								{copy.ctaRead}
+			<section class="va__hero" aria-labelledby="hero-title">
+				<div>
+					<h1 id="hero-title" class="va__wordmark">
+						Leonard<span class="ord">№ 01</span><br />
+						<span class="amp">Garden</span>
+					</h1>
+					<p class="va__lede"><em>{copy.heroTagline}</em></p>
+					<p class="va__bio">{copy.heroLead}</p>
+					<div class="va__cta-row">
+						<a class="lg-cta lg-cta--primary" href="#feed">{copy.ctaLatest}</a>
+						<a class="lg-cta lg-cta--ghost" href="#topics">{copy.ctaTopics}</a>
+					</div>
+				</div>
+				<aside class="va__hero-side">
+					<div class="lg-now" id="now">
+						<span class="lg-now__label">{copy.now}</span>
+						{copy.nowLines.map((line) => <p class="lg-now__line">{line}</p>)}
+					</div>
+					<p class="lg-meta">{copy.statsTpl(articleCount, noteCount)}</p>
+				</aside>
+			</section>
+
+			<main id="feed">
+				<div class="va__feed-head">
+					<h2>{copy.feedHead}</h2>
+					<div class="va__search-wrap">
+						<label class="lg-search" for="lg-search-input">
+							<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+								<circle cx="7" cy="7" r="5"></circle>
+								<path d="M11 11l3 3"></path>
+							</svg>
+							<input id="lg-search-input" type="search" placeholder={copy.searchPlaceholder} autocomplete="off" />
+							<kbd>/</kbd>
+						</label>
+					</div>
+				</div>
+
+				<ul class="lg-tabs" role="tablist" id="lg-tabs">
+					<li role="presentation"><button role="tab" aria-selected="true" data-tab="all">{copy.tabAll} <span class="count">{feed.length}</span></button></li>
+					<li role="presentation"><button role="tab" aria-selected="false" data-tab="articles">{copy.tabArticles} <span class="count">{articleCount}</span></button></li>
+					<li role="presentation"><button role="tab" aria-selected="false" data-tab="notes">{copy.tabNotes} <span class="count">{noteCount}</span></button></li>
+					<li role="presentation"><button role="tab" aria-selected="false" data-tab="pillar">{copy.tabPillar} <span class="count">{sortedPillars.length}</span></button></li>
+				</ul>
+
+				{initialFeed.length === 0 ? (
+					<p class="empty">{copy.emptyFeed}</p>
+				) : (
+					<ol class="va__list" id="lg-feed-list">
+						{initialFeed.map((row, i) => (
+							<li data-row data-type={row.type} data-pillar={row.pillar} data-search={`${row.title} ${row.description} ${row.pillar}`.toLowerCase()}>
+								<a href={row.href}>
+									<span class="va__num">№ {pad(initialFeed.length - i)}</span>
+									<span class="va__title">
+										<span class={`va__type-mark ${row.type === 'note' ? 'va__type-mark--note' : ''}`}>{row.type === 'note' ? copy.typeNote : copy.typeArticle}</span>
+										{row.title}
+										<small>{row.description}</small>
+									</span>
+									<span class="va__meta-cell">
+										{row.pillar} · {fmtDate(row.date)}{row.mins ? <><br />{row.mins} {copy.min}</> : null}
+									</span>
+								</a>
+							</li>
+						))}
+					</ol>
+				)}
+
+				<div class="va__pillars" id="lg-pillar-grid" hidden>
+					{sortedPillars.map((p, i) => {
+						const arts = sortedArticles.filter((a) => a.data.pillar === p.data.pillar).length;
+						const nts = sortedNotes.filter((n) => n.data.pillar === p.data.pillar).length;
+						return (
+							<a class="va__pillar" href={`/${locale}/pillars/${p.data.pillar}/`}>
+								<span class="va__pillar-num">{copy.ord} 0{i + 1}</span>
+								<span class="va__pillar-title">{p.data.title}</span>
+								<span class="va__pillar-desc">{p.data.description}</span>
+								<span class="lg-meta" style="margin-top:4px">{arts} {copy.tabArticles} · {nts} {copy.tabNotes}</span>
 							</a>
-						) : (
-							<span class="cta cta--ghost cta--disabled" aria-disabled="true">
-								{copy.ctaRead}
-							</span>
-						)
-					}
+						);
+					})}
+				</div>
+			</main>
+
+			<section id="topics" aria-labelledby="topics-head">
+				<h2 id="topics-head" class="visually-hidden">{copy.topicsHead}</h2>
+				<div class="va__pillars">
+					{sortedPillars.map((p, i) => (
+						<a class="va__pillar" href={`/${locale}/pillars/${p.data.pillar}/`}>
+							<span class="va__pillar-num">{copy.ord} 0{i + 1}</span>
+							<span class="va__pillar-title">{p.data.title}</span>
+							<span class="va__pillar-desc">{p.data.description}</span>
+						</a>
+					))}
 				</div>
 			</section>
 
-			<main id="main-content">
-				{
-					firstArticle && (
-						<section aria-labelledby="featured-heading">
-							<div class="section-head">
-								<h2 id="featured-heading">{copy.featured}</h2>
-							</div>
-							<div class="featured">
-								<ul class="card-list">
-									<li>
-										<a href={firstArticleHref}>
-											<span class="pill">{firstArticle.data.pillar}</span>
-											<span class="title">{firstArticle.data.title}</span>
-											<span class="desc">{firstArticle.data.description}</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</section>
-					)
+			<footer class="va__foot">
+				<span>{copy.colophon}</span>
+				<span>
+					<a href="/rss.xml">rss</a> ·
+					<a href={siteConfig.social.github}>github</a> ·
+					{siteConfig.languages.map((l, i) => (
+						<>{i > 0 ? ' / ' : ' '}<a href={`/${l}/`}>{l.toUpperCase()}</a></>
+					))}
+				</span>
+			</footer>
+		</article>
+
+		<script>
+			// Tabs + client-side search. Progressive enhancement: works with JS off
+			// (you see the full feed); JS just adds filtering and tab switching.
+			(() => {
+				const tabsEl = document.getElementById('lg-tabs');
+				const list = document.getElementById('lg-feed-list');
+				const grid = document.getElementById('lg-pillar-grid');
+				const search = document.getElementById('lg-search-input') as HTMLInputElement | null;
+				if (!tabsEl || !list || !grid || !search) return;
+
+				let activeTab: 'all' | 'articles' | 'notes' | 'pillar' = 'all';
+				let q = '';
+
+				function apply() {
+					if (activeTab === 'pillar') {
+						list.hidden = true;
+						grid.hidden = false;
+						return;
+					}
+					list.hidden = false;
+					grid.hidden = true;
+
+					const rows = list.querySelectorAll<HTMLElement>('[data-row]');
+					rows.forEach((row) => {
+						const type = row.dataset.type;
+						const haystack = row.dataset.search || '';
+						const typeOk = activeTab === 'all' || type === activeTab.slice(0, -1); // 'articles' -> 'article'
+						const queryOk = !q || haystack.includes(q);
+						row.hidden = !(typeOk && queryOk);
+					});
 				}
 
-				<section id="topics" aria-labelledby="pillars-heading">
-					<div class="section-head">
-						<h2 id="pillars-heading">{copy.pillars}</h2>
-					</div>
-					{
-						sortedPillars.length === 0 ? (
-							<p class="empty">{copy.emptyPillars}</p>
-						) : (
-							<ul class="card-list">
-								{sortedPillars.map((p) => (
-									<li>
-										<a href={`/${locale}/pillars/${p.data.pillar}/`}>
-											<span class="pill">{p.data.pillar}</span>
-											<span class="title">{p.data.title}</span>
-											<span class="desc">{p.data.description}</span>
-										</a>
-									</li>
-								))}
-							</ul>
-						)
-					}
-				</section>
+				tabsEl.addEventListener('click', (e) => {
+					const btn = (e.target as HTMLElement).closest('button[data-tab]') as HTMLButtonElement | null;
+					if (!btn) return;
+					tabsEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-selected', 'false'));
+					btn.setAttribute('aria-selected', 'true');
+					activeTab = btn.dataset.tab as typeof activeTab;
+					apply();
+				});
 
-				<section id="by-pillar" aria-labelledby="by-pillar-heading">
-					<div class="section-head">
-						<h2 id="by-pillar-heading">{copy.byPillar}</h2>
-					</div>
-					{
-						sortedPillars.length === 0 ? (
-							<p class="empty">{copy.emptyPillars}</p>
-						) : (
-							<div class="pillar-feed">
-								{pillarFeeds.map(({ hub, articles: pa, notes: pn }) => {
-									const hubHref = `/${locale}/pillars/${hub.data.pillar}/`;
-									const hasFeed = pa.length > 0 || pn.length > 0;
-									return (
-										<div class="pillar-block">
-											<div class="pillar-block__top">
-												<h3 id={`pillar-${hub.data.pillar}`}>
-													<span class="pill">{hub.data.pillar}</span>
-													<span class="pillar-block__name">{hub.data.title}</span>
-												</h3>
-												<a class="hub" href={hubHref}>
-													{copy.viewHub} →
-												</a>
-											</div>
-											{!hasFeed ? (
-												<p class="empty empty-zero">{copy.emptyPillarFeed}</p>
-											) : (
-												<div class="pillar-block__cols">
-													<div>
-														<h4>{copy.miniArticles}</h4>
-														{pa.length === 0 ? (
-															<p class="muted-dash">—</p>
-														) : (
-															<ul class="card-list">
-																{pa.map((a) => (
-																	<li>
-																		<a href={`/${locale}/articles/${slugFromId(a.id, locale)}/`}>
-																			<span class="title">{a.data.title}</span>
-																			<span class="desc">{a.data.description}</span>
-																		</a>
-																	</li>
-																))}
-															</ul>
-														)}
-													</div>
-													<div>
-														<h4>{copy.miniNotes}</h4>
-														{pn.length === 0 ? (
-															<p class="muted-dash">—</p>
-														) : (
-															<ul class="card-list">
-																{pn.map((n) => (
-																	<li>
-																		<a href={`/${locale}/notes/${slugFromId(n.id, locale)}/`}>
-																			<span class="title">{n.data.title}</span>
-																			<span class="desc">{n.data.description}</span>
-																		</a>
-																	</li>
-																))}
-															</ul>
-														)}
-													</div>
-												</div>
-											)}
-										</div>
-									);
-								})}
-							</div>
-						)
-					}
-				</section>
+				search.addEventListener('input', () => {
+					q = search.value.trim().toLowerCase();
+					apply();
+				});
 
-				<section id="articles" aria-labelledby="articles-heading">
-					<div class="section-head">
-						<h2 id="articles-heading">{copy.allArticles}</h2>
-					</div>
-					{
-						sortedArticles.length === 0 ? (
-							<p class="empty">{copy.emptyArticles}</p>
-						) : articlesAfterFeatured.length === 0 ? (
-							<p class="empty">{copy.onlyOneArticle}</p>
-						) : (
-							<ul class="card-list">
-								{articlesAfterFeatured.map((a) => (
-									<li>
-										<a href={`/${locale}/articles/${slugFromId(a.id, locale)}/`}>
-											<span class="title">{a.data.title}</span>
-											<span class="desc">{a.data.description}</span>
-										</a>
-									</li>
-								))}
-							</ul>
-						)
+				// "/" focus shortcut
+				document.addEventListener('keydown', (e) => {
+					if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') {
+						e.preventDefault();
+						search.focus();
 					}
-				</section>
-
-				<section id="notes" aria-labelledby="notes-heading">
-					<div class="section-head">
-						<h2 id="notes-heading">{copy.allNotes}</h2>
-					</div>
-					{
-						sortedNotes.length === 0 ? (
-							<p class="empty">{copy.emptyNotes}</p>
-						) : (
-							<ul class="card-list">
-								{sortedNotes.map((n) => (
-									<li>
-										<a href={`/${locale}/notes/${slugFromId(n.id, locale)}/`}>
-											<span class="title">{n.data.title}</span>
-											<span class="desc">{n.data.description}</span>
-										</a>
-									</li>
-								))}
-							</ul>
-						)
-					}
-				</section>
-			</main>
-
-			<footer class="foot">
-				© {new Date().getFullYear()} {siteConfig.name} · {copy.langSwitch}: {locale.toUpperCase()}
-			</footer>
-		</div>
+				});
+			})();
+		</script>
 	</body>
 </html>

@@ -1,0 +1,92 @@
+/**
+ * Leonard's Garden — design tokens
+ * Warm paper neutrals + botanical green accent. Long-reading friendly.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* ── Color: paper & ink ─────────────────────────────── */
+  --paper:        #f6f1e7;
+  --paper-2:      #efe8d9;
+  --paper-3:      #e7dec9;
+  --card:         #fbf8f1;
+  --ink:          #221f1a;
+  --ink-soft:     #4a463d;
+  --ink-mute:     #847d6e;
+  --rule:         #d8cfb8;
+  --rule-strong:  #b9ad8e;
+
+  /* ── Accent: botanical green */
+  --moss:         oklch(0.48 0.08 148);
+  --moss-deep:    oklch(0.40 0.09 148);
+  --moss-soft:    color-mix(in oklab, var(--moss) 14%, transparent);
+  --moss-wash:    color-mix(in oklab, var(--moss) 6%, var(--paper));
+
+  /* ── Type ───────────────────────────────────────────── */
+  --serif:    'Source Serif 4', 'Iowan Old Style', 'Charter', Georgia, serif;
+  --sans:     'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --mono:     'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --t-display:  clamp(2.5rem, 6vw, 4.5rem);
+  --t-h1:       clamp(2rem, 4vw, 2.75rem);
+  --t-h2:       1.375rem;
+  --t-h3:       1.125rem;
+  --t-body:     1.0625rem;
+  --t-meta:     0.8125rem;
+  --t-micro:    0.6875rem;
+
+  --leading-tight:   1.08;
+  --leading-snug:    1.32;
+  --leading-body:    1.62;
+
+  /* ── Space ───────────────────────────────────────────── */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px;
+  --s-9: 56px; --s-10: 72px; --s-11: 96px;
+
+  /* ── Geometry ────────────────────────────────────────── */
+  --r-sm: 4px; --r: 8px; --r-lg: 14px;
+  --hairline: 1px solid var(--rule);
+
+  --measure: 38rem;
+  --shell:   72rem;
+}
+
+:root[data-theme="dark"] {
+  --paper:        #1a1815;
+  --paper-2:      #221f1b;
+  --paper-3:      #2c2823;
+  --card:         #201d19;
+  --ink:          #f1ebdb;
+  --ink-soft:     #c2bba8;
+  --ink-mute:     #8c8675;
+  --rule:         #3a352d;
+  --rule-strong:  #564f42;
+
+  --moss:         oklch(0.74 0.10 148);
+  --moss-deep:    oklch(0.82 0.11 148);
+  --moss-soft:    color-mix(in oklab, var(--moss) 18%, transparent);
+  --moss-wash:    color-mix(in oklab, var(--moss) 6%, var(--paper));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --paper:        #1a1815;
+    --paper-2:      #221f1b;
+    --paper-3:      #2c2823;
+    --card:         #201d19;
+    --ink:          #f1ebdb;
+    --ink-soft:     #c2bba8;
+    --ink-mute:     #8c8675;
+    --rule:         #3a352d;
+    --rule-strong:  #564f42;
+
+    --moss:         oklch(0.74 0.10 148);
+    --moss-deep:    oklch(0.82 0.11 148);
+    --moss-soft:    color-mix(in oklab, var(--moss) 18%, transparent);
+    --moss-wash:    color-mix(in oklab, var(--moss) 6%, var(--paper));
+  }
+}
+
+::selection { background: var(--moss-soft); color: var(--ink); }
