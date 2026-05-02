@@ -1,0 +1,1046 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<title>leonard.garden — home redesign</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=Plus+Jakarta+Sans:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  color-scheme: light dark;
+
+  /* light (default) — warm paper */
+  --paper:        #f6f1e7;
+  --paper-2:      #efe8d9;
+  --paper-3:      #e7dec9;
+  --card:         #fbf8f1;
+  --ink:          #221f1a;
+  --ink-soft:     #4a463d;
+  --ink-mute:     #847d6e;
+  --rule:         #d8cfb8;
+  --rule-strong:  #b9ad8e;
+
+  --moss:         oklch(0.48 0.08 148);
+  --moss-deep:    oklch(0.40 0.09 148);
+  --moss-soft:    color-mix(in oklab, var(--moss) 14%, transparent);
+  --moss-wash:    color-mix(in oklab, var(--moss) 6%, var(--paper));
+
+  --shadow-panel: 0 1px 0 rgba(255,255,255,0.6) inset, 0 18px 48px -36px rgba(60,50,30,0.35);
+
+  --serif:    'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  --sans:     'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --mono:     'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --hairline: 1px solid var(--rule);
+  --shell: 78rem;
+}
+
+/* explicit dark — warm-toned, inked-paper feel (not generic charcoal) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper:        #16140f;          /* deep warm ink */
+  --paper-2:      #1d1a14;
+  --paper-3:      #25211a;
+  --card:         #1c1913;          /* slightly lifted card */
+  --ink:          #efe7d3;          /* warm cream type */
+  --ink-soft:     #c8bfa8;
+  --ink-mute:     #8a8270;
+  --rule:         #2f2a21;
+  --rule-strong:  #4a4332;
+
+  --moss:         oklch(0.78 0.12 148);
+  --moss-deep:    oklch(0.86 0.13 148);
+  --moss-soft:    color-mix(in oklab, var(--moss) 18%, transparent);
+  --moss-wash:    color-mix(in oklab, var(--moss) 7%, var(--paper));
+
+  --shadow-panel: 0 1px 0 rgba(255,235,200,0.04) inset, 0 22px 60px -40px rgba(0,0,0,0.7);
+}
+
+/* respect system preference when no explicit choice */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    color-scheme: dark;
+    --paper:        #16140f;
+    --paper-2:      #1d1a14;
+    --paper-3:      #25211a;
+    --card:         #1c1913;
+    --ink:          #efe7d3;
+    --ink-soft:     #c8bfa8;
+    --ink-mute:     #8a8270;
+    --rule:         #2f2a21;
+    --rule-strong:  #4a4332;
+    --moss:         oklch(0.78 0.12 148);
+    --moss-deep:    oklch(0.86 0.13 148);
+    --moss-soft:    color-mix(in oklab, var(--moss) 18%, transparent);
+    --moss-wash:    color-mix(in oklab, var(--moss) 7%, var(--paper));
+    --shadow-panel: 0 1px 0 rgba(255,235,200,0.04) inset, 0 22px 60px -40px rgba(0,0,0,0.7);
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+::selection { background: var(--moss-soft); color: var(--ink); }
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 28px 40px 96px;
+  position: relative;
+}
+
+/* ── Masthead ────────────────────────────────────────── */
+.mast {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 0;
+  border-bottom: var(--hairline);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-mute);
+}
+.mast .brand {
+  display: flex; align-items: baseline; gap: 10px;
+  text-decoration: none; color: var(--ink);
+}
+.mast .brand .glyph {
+  width: 26px; height: 26px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  display: inline-grid; place-items: center;
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: 16px; line-height: 1;
+  position: relative; top: 4px;
+}
+.mast .brand .name {
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: 17px; color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.mast .brand .vol {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.mast nav { display: flex; gap: 22px; justify-self: center; }
+.mast nav a {
+  text-decoration: none;
+  color: var(--ink-mute);
+  letter-spacing: 0.02em;
+  position: relative;
+}
+.mast nav a:hover { color: var(--ink); }
+.mast nav a.is-active { color: var(--ink); }
+.mast nav a.is-active::before {
+  content: '◆ '; color: var(--moss); font-size: 9px;
+  position: absolute; left: -12px; top: 1px;
+}
+
+.mast .right { display: flex; align-items: center; gap: 14px; justify-self: end; }
+
+.theme-toggle {
+  appearance: none;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  width: 28px; height: 26px;
+  display: inline-grid; place-items: center;
+  cursor: pointer;
+  color: var(--ink-soft);
+  position: relative;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.theme-toggle:hover { border-color: var(--moss); color: var(--moss-deep); }
+.theme-toggle .ic-sun { display: none; }
+.theme-toggle .ic-moon { display: block; }
+:root[data-theme="dark"] .theme-toggle .ic-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .ic-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .theme-toggle .ic-sun { display: block; }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .theme-toggle .ic-moon { display: none; }
+}
+.mast .lang {
+  display: flex; gap: 4px; padding: 2px;
+  border: 1px solid var(--rule); border-radius: 4px;
+  font-size: 11px;
+}
+.mast .lang a {
+  padding: 2px 7px; border-radius: 2px;
+  text-decoration: none; color: var(--ink-mute);
+}
+.mast .lang a[aria-current="page"] {
+  background: var(--ink); color: var(--paper);
+}
+
+.mast .status {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px;
+}
+.mast .status .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--moss);
+  box-shadow: 0 0 0 3px var(--moss-soft);
+  animation: pulse 2.4s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── HERO ────────────────────────────────────────────── */
+.hero {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 56px;
+  padding: 64px 0 56px;
+  border-bottom: var(--hairline);
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 1px; background: var(--rule);
+  opacity: 0.5;
+}
+
+.hero__stamp {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--moss-deep);
+  margin: 0 0 22px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero__stamp::after {
+  content: ''; width: 80px; height: 1px; background: var(--moss);
+  opacity: 0.6;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 5.4vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin: 0 0 24px;
+  color: var(--ink);
+}
+.hero h1 .ital { font-style: italic; }
+.hero h1 .moss { color: var(--moss-deep); }
+.hero h1 .ord {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.18em;
+  vertical-align: super;
+  color: var(--ink-mute);
+  letter-spacing: 0.06em;
+  margin-left: 10px;
+  font-weight: 400;
+}
+
+.hero__lede {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 36ch;
+  margin: 0 0 18px;
+}
+.hero__lede em { font-style: italic; color: var(--ink); }
+
+.hero__bio {
+  font-size: 0.96rem;
+  color: var(--ink-soft);
+  margin: 0 0 28px;
+  max-width: 44ch;
+  line-height: 1.6;
+}
+
+.hero__cta {
+  display: inline-flex; gap: 10px; flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 11px 18px;
+  font: 500 0.92rem var(--sans);
+  border-radius: 6px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all .15s;
+  cursor: pointer;
+}
+.btn--primary { background: var(--ink); color: var(--paper); }
+.btn--primary:hover { background: var(--moss-deep); }
+.btn--ghost { border-color: var(--rule-strong); color: var(--ink); background: transparent; }
+.btn--ghost:hover { border-color: var(--moss); color: var(--moss-deep); }
+.btn .arrow { font-family: var(--mono); font-size: 14px; transition: transform .15s; }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* HERO ASIDE — "current state" diagram, an homage to the article's pipeline */
+.hero__panel {
+  align-self: end;
+  background: var(--card);
+  border: var(--hairline);
+  border-radius: 10px;
+  padding: 22px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  position: relative;
+  box-shadow: var(--shadow-panel);
+}
+.hero__panel-head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 14px;
+}
+.hero__panel-head b { color: var(--moss-deep); font-weight: 500; }
+
+.flow {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  white-space: pre;
+}
+.flow .row { display: flex; align-items: center; gap: 8px; }
+.flow .row .lbl { color: var(--ink); }
+.flow .row .arr { color: var(--moss); opacity: 0.85; }
+.flow .row .meta { color: var(--ink-mute); margin-left: auto; font-size: 11px; }
+.flow .branch {
+  border-left: 2px solid var(--moss-soft);
+  margin-left: 8px;
+  padding: 4px 0 4px 14px;
+  display: grid; gap: 4px;
+}
+.flow .converge {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--rule);
+  display: flex; align-items: center; gap: 8px;
+  color: var(--ink);
+}
+.flow .converge .pill {
+  font-size: 10px; padding: 2px 7px; border-radius: 3px;
+  background: var(--moss-soft); color: var(--moss-deep);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  font-weight: 500;
+}
+
+.hero__now {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--rule);
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 6px 14px;
+  font-size: 11.5px;
+}
+.hero__now .k { color: var(--ink-mute); letter-spacing: 0.04em; }
+.hero__now .v { color: var(--ink); font-family: var(--sans); font-size: 13px; }
+
+/* ── "Modes" — pillar nav reframed ─────────────────── */
+.modes {
+  padding: 56px 0 40px;
+  border-bottom: var(--hairline);
+}
+.section-head {
+  display: flex; justify-content: space-between; align-items: end;
+  margin-bottom: 28px;
+  gap: 24px; flex-wrap: wrap;
+}
+.section-head h2 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.9rem;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--ink);
+}
+.section-head .blurb {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-mute);
+  max-width: 42ch;
+  letter-spacing: 0.01em;
+}
+.section-head .blurb b { color: var(--ink); font-weight: 500; }
+
+.modes__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: var(--hairline);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--card);
+}
+.mode {
+  display: block;
+  padding: 22px 22px 24px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  border-right: var(--hairline);
+  transition: background .15s;
+}
+.mode:last-child { border-right: 0; }
+.mode:hover { background: var(--moss-wash); }
+.mode__id {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.mode__id .badge {
+  background: var(--ink); color: var(--paper);
+  padding: 2px 7px; border-radius: 3px;
+  font-size: 9px; letter-spacing: 0.12em;
+}
+.mode h3 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.6rem;
+  letter-spacing: -0.012em;
+  margin: 0 0 8px;
+  line-height: 1.05;
+  color: var(--ink);
+}
+.mode h3 .ascii { color: var(--moss); font-style: normal; font-family: var(--mono); font-size: 0.65em; vertical-align: middle; margin-right: 6px; opacity: 0.7; }
+.mode__desc {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+}
+.mode__counts {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  display: flex; gap: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+}
+.mode__counts b { color: var(--ink); font-weight: 500; }
+.mode__counts .sep { opacity: 0.4; }
+
+/* ── Feed (bigger, smarter) ─────────────────────────── */
+.feed {
+  padding: 56px 0 0;
+}
+.feed__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  margin-bottom: 24px;
+  gap: 24px;
+}
+.feed__head h2 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.9rem;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.searchbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px;
+  background: var(--card);
+  border: var(--hairline);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  min-width: 320px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.searchbar:focus-within {
+  border-color: var(--moss);
+  box-shadow: 0 0 0 3px var(--moss-soft);
+}
+.searchbar svg { color: var(--moss); flex-shrink: 0; }
+.searchbar input {
+  flex: 1; min-width: 0;
+  background: transparent; border: 0; outline: 0;
+  font: inherit;
+  color: var(--ink);
+}
+.searchbar kbd {
+  font-family: var(--mono); font-size: 10px;
+  border: 1px solid var(--rule); padding: 1px 5px;
+  border-radius: 3px; color: var(--ink-mute);
+  background: var(--paper);
+}
+
+.tabs {
+  display: flex; gap: 0;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  border-bottom: var(--hairline);
+  flex-wrap: wrap;
+}
+.tabs li { margin: 0; }
+.tabs button {
+  appearance: none;
+  background: none; border: 0;
+  padding: 10px 16px 12px;
+  font: 500 13px var(--mono);
+  color: var(--ink-mute);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  display: inline-flex; align-items: center; gap: 8px;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+}
+.tabs button[aria-selected="true"] {
+  color: var(--ink);
+  border-bottom-color: var(--moss);
+}
+.tabs button:hover { color: var(--ink); }
+.tabs .ct {
+  font-size: 10px;
+  background: var(--paper-2);
+  color: var(--ink-mute);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 400;
+}
+.tabs button[aria-selected="true"] .ct { background: var(--moss-soft); color: var(--moss-deep); }
+
+.feed__list {
+  list-style: none; padding: 0; margin: 0;
+}
+.feed__row {
+  display: grid;
+  grid-template-columns: 56px 110px 1fr 140px;
+  align-items: baseline;
+  gap: 28px;
+  padding: 24px 8px 24px 0;
+  border-bottom: var(--hairline);
+  text-decoration: none;
+  color: inherit;
+  transition: background .15s;
+  position: relative;
+}
+.feed__row:hover { background: var(--moss-wash); }
+.feed__row:hover .feed__title { color: var(--moss-deep); }
+.feed__row::before {
+  content: '';
+  position: absolute; left: -8px; top: 50%; width: 0; height: 60%;
+  background: var(--moss);
+  transform: translateY(-50%);
+  transition: width .2s;
+}
+.feed__row:hover::before { width: 3px; }
+
+.feed__num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+}
+.feed__type {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.feed__type .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+.feed__type.is-note .tag {
+  border-style: dashed;
+  color: var(--moss-deep);
+  border-color: var(--moss);
+}
+.feed__type .pillar {
+  display: block;
+  font-size: 10px;
+  color: var(--moss-deep);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+.feed__title {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.25;
+  transition: color .15s;
+}
+.feed__title small {
+  display: block;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  margin-top: 6px;
+  line-height: 1.5;
+  max-width: 60ch;
+}
+.feed__title .tags {
+  display: inline-flex; gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.feed__title .tags span {
+  font-family: var(--mono); font-size: 10.5px;
+  color: var(--ink-mute);
+  padding: 2px 7px;
+  background: var(--paper-2);
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+}
+
+.feed__meta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  text-align: right;
+  display: grid; gap: 4px;
+  white-space: nowrap;
+}
+.feed__meta .date { color: var(--ink); }
+.feed__meta .read { display: inline-flex; align-items: center; gap: 4px; justify-self: end; }
+
+/* ── Workshop log ─────────────────────────────────────── */
+.workshop {
+  padding: 64px 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+.workshop__col h3 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: var(--hairline);
+}
+.log {
+  display: grid; gap: 14px;
+}
+.log__row {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 18px;
+  align-items: baseline;
+  font-size: 14px;
+}
+.log__when {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+}
+.log__what { color: var(--ink-soft); line-height: 1.55; }
+.log__what b { color: var(--ink); font-weight: 500; }
+.log__what em { font-family: var(--mono); font-style: normal; font-size: 12.5px; color: var(--moss-deep); background: var(--moss-soft); padding: 1px 5px; border-radius: 3px; }
+
+.contract {
+  background: var(--card);
+  border: var(--hairline);
+  border-radius: 10px;
+  padding: 22px 24px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.contract .head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 10.5px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-mute);
+  padding-bottom: 10px; margin-bottom: 14px;
+  border-bottom: 1px dashed var(--rule);
+}
+.contract .row { display: grid; grid-template-columns: 88px 1fr; gap: 16px; padding: 4px 0; }
+.contract .row .k { color: var(--ink-mute); }
+.contract .row .v { color: var(--ink); }
+.contract .row .v.moss { color: var(--moss-deep); }
+.contract .row .v.muted { color: var(--ink-mute); }
+
+/* ── Footer / colophon ────────────────────────────────── */
+.foot {
+  margin-top: 80px;
+  padding-top: 28px;
+  border-top: 3px double var(--rule-strong);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px; align-items: baseline;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.foot a { text-decoration: none; }
+.foot a:hover { color: var(--moss-deep); }
+.foot .links { display: flex; gap: 18px; }
+
+/* corner ASCII flourish */
+.corner-mark {
+  position: absolute;
+  top: 16px; right: 40px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.12em;
+  opacity: 0.55;
+}
+
+@media (max-width: 920px) {
+  .shell { padding: 18px 22px 56px; }
+  .mast { grid-template-columns: 1fr auto; }
+  .mast nav { grid-column: 1 / -1; justify-self: start; flex-wrap: wrap; }
+  .hero { grid-template-columns: 1fr; gap: 36px; padding: 40px 0; }
+  .modes__grid { grid-template-columns: 1fr 1fr; }
+  .mode:nth-child(2) { border-right: 0; }
+  .mode:nth-child(1), .mode:nth-child(2) { border-bottom: var(--hairline); }
+  .feed__row { grid-template-columns: 1fr; gap: 8px; }
+  .feed__meta { text-align: left; grid-auto-flow: column; gap: 14px; }
+  .workshop { grid-template-columns: 1fr; gap: 32px; }
+  .corner-mark { display: none; }
+}
+@media (max-width: 560px) {
+  .modes__grid { grid-template-columns: 1fr; }
+  .mode { border-right: 0; border-bottom: var(--hairline); }
+  .mode:last-child { border-bottom: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="corner-mark">vol. iv · no. 02 · ◦◦◦</div>
+
+  <header class="mast">
+    <a class="brand" href="#">
+      <span class="glyph" aria-hidden="true">L</span>
+      <span>
+        <span class="name">Leonard&rsquo;s Garden</span>
+        <span class="vol" style="display:block;margin-top:2px;">a learning hub · workshop journal</span>
+      </span>
+    </a>
+    <nav aria-label="Site">
+      <a href="#feed" class="is-active">feed</a>
+      <a href="#modes">topics</a>
+      <a href="#workshop">workshop</a>
+      <a href="/rss.xml">rss</a>
+    </nav>
+    <div class="right">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+        <svg class="ic-sun" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="3"></circle><path d="M8 1.5v1.5M8 13v1.5M1.5 8h1.5M13 8h1.5M3.3 3.3l1 1M11.7 11.7l1 1M3.3 12.7l1-1M11.7 4.3l1-1"></path></svg>
+        <svg class="ic-moon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M13 9.2A5.5 5.5 0 0 1 6.8 3a5.5 5.5 0 1 0 6.2 6.2z"></path></svg>
+      </button>
+      <span class="status"><span class="dot"></span> đang viết · 3 drafts</span>
+      <span class="lang" role="group" aria-label="Language">
+        <a href="/vi/" aria-current="page">VI</a>
+        <a href="/en/">EN</a>
+      </span>
+    </div>
+  </header>
+
+  <!-- HERO ────────────────────────────────────────────── -->
+  <section class="hero">
+    <div>
+      <p class="hero__stamp">◦ field notes from a backend engineer</p>
+      <h1>
+        Đọc, thử, <span class="ital moss">viết lại</span><br />
+        cho rõ.<span class="ord">№ 01</span>
+      </h1>
+      <p class="hero__lede"><em>A bilingual learning hub.</em> Ghi chú nhanh khi ý tưởng còn rough, bài dài hơn khi đã đào sâu.</p>
+      <p class="hero__bio">
+        Mình là backend engineer, làm việc với hệ thống ngân hàng và streaming. Ở đây mình mổ xẻ
+        kiến trúc agentic, idempotency contracts, exactly-once trên Kafka — và cách những thứ đó
+        sống chung được với constraint của ngành tài chính.
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#feed">Đọc bài mới nhất <span class="arrow">→</span></a>
+        <a class="btn btn--ghost" href="#modes">Xem chủ đề</a>
+      </div>
+    </div>
+
+    <aside class="hero__panel" aria-label="Current pipeline">
+      <div class="hero__panel-head">
+        <span>./pipeline.now</span>
+        <b>● live</b>
+      </div>
+      <div class="flow" aria-hidden="true">
+        <div class="row"><span class="lbl">read</span><span class="arr">→</span><span>DDIA · ch. 11</span><span class="meta">~p.412</span></div>
+        <div class="row"><span class="lbl">write</span><span class="arr">→</span><span>idempotency contract</span><span class="meta">draft 3/5</span></div>
+        <div class="row"><span class="lbl">build</span><span class="arr">→</span><span>kafka exactly-once</span><span class="meta">demo</span></div>
+        <div class="converge">
+          <span class="pill">merge</span>
+          <span style="font-family:var(--sans); font-size:13px; color:var(--ink);">→ next article</span>
+        </div>
+      </div>
+      <div class="hero__now">
+        <span class="k">// since</span><span class="v">Apr 2026</span>
+        <span class="k">// stack</span><span class="v">Kafka · Java · Go</span>
+        <span class="k">// mode</span><span class="v">deep-dive</span>
+      </div>
+    </aside>
+  </section>
+
+  <!-- MODES (pillars reframed as agent-modes) ─────────── -->
+  <section class="modes" id="modes" aria-labelledby="modes-h">
+    <div class="section-head">
+      <h2 id="modes-h">modes &amp; pillars</h2>
+      <p class="blurb">Mỗi pillar là một <b>mode</b> — một cách đọc và viết. Click vào để vào hub của chủ đề đó: bài viết dài, ghi chú nhanh, và một bộ proof points.</p>
+    </div>
+    <div class="modes__grid">
+      <a class="mode" href="/vi/pillars/ai/">
+        <div class="mode__id"><span>mode 01</span><span class="badge">primary</span></div>
+        <h3><span class="ascii">[/]</span>AI &amp; agentic</h3>
+        <p class="mode__desc">Agent đọc gì làm nguồn sự thật, output cố định ở định dạng nào, ranh giới nào không vượt.</p>
+        <div class="mode__counts"><span><b>4</b> articles</span><span class="sep">·</span><span><b>7</b> notes</span></div>
+      </a>
+      <a class="mode" href="/vi/pillars/backend/">
+        <div class="mode__id"><span>mode 02</span><span></span></div>
+        <h3><span class="ascii">[~]</span>Backend</h3>
+        <p class="mode__desc">Idempotency, transactional outbox, system-vs-user data layers, đường biên dịch vụ.</p>
+        <div class="mode__counts"><span><b>2</b> articles</span><span class="sep">·</span><span><b>5</b> notes</span></div>
+      </a>
+      <a class="mode" href="/vi/pillars/kafka/">
+        <div class="mode__id"><span>mode 03</span><span></span></div>
+        <h3><span class="ascii">[≈]</span>Kafka &amp; streaming</h3>
+        <p class="mode__desc">Exactly-once trong thực tế, partition design, lag/throughput trade-offs.</p>
+        <div class="mode__counts"><span><b>1</b> article</span><span class="sep">·</span><span><b>3</b> notes</span></div>
+      </a>
+      <a class="mode" href="/vi/pillars/banking/">
+        <div class="mode__id"><span>mode 04</span><span></span></div>
+        <h3><span class="ascii">[$]</span>Banking systems</h3>
+        <p class="mode__desc">Constraint của ngành tài chính: ledger, double-entry, reg, audit, recovery.</p>
+        <div class="mode__counts"><span><b>0</b> articles</span><span class="sep">·</span><span><b>2</b> notes</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FEED ────────────────────────────────────────────── -->
+  <section class="feed" id="feed" aria-labelledby="feed-h">
+    <div class="feed__head">
+      <h2 id="feed-h">recently merged</h2>
+      <label class="searchbar" for="q">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="7" cy="7" r="5"></circle>
+          <path d="M11 11l3 3"></path>
+        </svg>
+        <input id="q" type="search" placeholder="grep the garden…" autocomplete="off" />
+        <kbd>/</kbd>
+      </label>
+    </div>
+
+    <ul class="tabs" role="tablist">
+      <li><button role="tab" aria-selected="true">all <span class="ct">04</span></button></li>
+      <li><button role="tab" aria-selected="false">articles <span class="ct">02</span></button></li>
+      <li><button role="tab" aria-selected="false">notes <span class="ct">02</span></button></li>
+      <li><button role="tab" aria-selected="false">by mode <span class="ct">04</span></button></li>
+    </ul>
+
+    <ol class="feed__list">
+      <li>
+        <a class="feed__row" href="/vi/articles/career-ops-agentic-architecture/">
+          <span class="feed__num">№ 004</span>
+          <span class="feed__type">
+            <span class="tag">article</span>
+            <span class="pillar">mode 01 · ai</span>
+          </span>
+          <span class="feed__title">
+            Career-Ops: mô hình agentic, vai trò AI và kiến trúc hệ thống
+            <small>Mổ xẻ pipeline tìm việc dùng AI CLI: agent đọc modes, luồng đánh giá offer, phân tách dữ liệu system/user và các lớp script — dựa trên tài liệu mở của Career-Ops.</small>
+            <span class="tags"><span>agentic</span><span>architecture</span><span>career-ops</span><span>claude-code</span></span>
+          </span>
+          <span class="feed__meta">
+            <span class="date">2026·04·19</span>
+            <span class="read">14 min read</span>
+            <span style="opacity:.6">~5,608 chars</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="feed__row" href="#">
+          <span class="feed__num">№ 003</span>
+          <span class="feed__type is-note">
+            <span class="tag">note</span>
+            <span class="pillar">mode 02 · backend</span>
+          </span>
+          <span class="feed__title">
+            Idempotency keys ở edge — câu hỏi mở
+            <small>Một vài ý còn rough: client nên sinh key, hay gateway? TTL bao lâu là đủ? Tại sao retry-safe ≠ idempotent.</small>
+            <span class="tags"><span>idempotency</span><span>edge</span><span>rough</span></span>
+          </span>
+          <span class="feed__meta">
+            <span class="date">2026·04·18</span>
+            <span class="read">~4 min</span>
+            <span style="opacity:.6">indexable: false</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="feed__row" href="/vi/articles/hello-article/">
+          <span class="feed__num">№ 002</span>
+          <span class="feed__type">
+            <span class="tag">article</span>
+            <span class="pillar">mode 02 · backend</span>
+          </span>
+          <span class="feed__title">
+            Bài viết đầu tiên
+            <small>Seed article để kiểm tra pipeline nội dung — sẽ được thay bằng deep-dive về transactional outbox.</small>
+            <span class="tags"><span>seed</span></span>
+          </span>
+          <span class="feed__meta">
+            <span class="date">2026·04·18</span>
+            <span class="read">2 min</span>
+            <span style="opacity:.6">draft</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="feed__row" href="#">
+          <span class="feed__num">№ 001</span>
+          <span class="feed__type is-note">
+            <span class="tag">note</span>
+            <span class="pillar">mode 03 · kafka</span>
+          </span>
+          <span class="feed__title">
+            Exactly-once vs effectively-once — đừng nhầm
+            <small>Kafka EOS bảo vệ producer→broker→consumer trong scope của topic; “effectively-once” end-to-end vẫn cần idempotent sink.</small>
+            <span class="tags"><span>kafka</span><span>eos</span></span>
+          </span>
+          <span class="feed__meta">
+            <span class="date">2026·04·15</span>
+            <span class="read">~3 min</span>
+          </span>
+        </a>
+      </li>
+    </ol>
+  </section>
+
+  <!-- WORKSHOP ────────────────────────────────────────── -->
+  <section class="workshop" id="workshop">
+    <div class="workshop__col">
+      <h3>workshop log · last 30d</h3>
+      <div class="log">
+        <div class="log__row">
+          <span class="log__when">04·19  09:42</span>
+          <span class="log__what"><b>published</b> Career-Ops agentic architecture · <em>mode/01-ai</em></span>
+        </div>
+        <div class="log__row">
+          <span class="log__when">04·17  22:18</span>
+          <span class="log__what"><b>note</b> exactly-once vs effectively-once — moved to drafts</span>
+        </div>
+        <div class="log__row">
+          <span class="log__when">04·15  07:05</span>
+          <span class="log__what"><b>read</b> DDIA ch.11 — flagged 6 paragraphs for re-read</span>
+        </div>
+        <div class="log__row">
+          <span class="log__when">04·12  18:30</span>
+          <span class="log__what"><b>built</b> kafka-eos demo · <em>repo: leonard/kafka-eos-demo</em></span>
+        </div>
+        <div class="log__row">
+          <span class="log__when">04·08  11:00</span>
+          <span class="log__what"><b>started</b> idempotency contract series · 5 entries planned</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="workshop__col">
+      <h3>writing contract</h3>
+      <div class="contract" aria-label="What to expect">
+        <div class="head"><span>./CONTRACT.md</span><span style="color:var(--moss-deep);">v1.2</span></div>
+        <div class="row"><span class="k">// promise</span><span class="v">claims có chứng cứ, không bịa metric</span></div>
+        <div class="row"><span class="k">// notes</span><span class="v muted">rough · có thể sai · indexable=false</span></div>
+        <div class="row"><span class="k">// articles</span><span class="v">đã đào sâu, có ví dụ chạy được</span></div>
+        <div class="row"><span class="k">// promotion</span><span class="v moss">notes → articles khi topic crystallize</span></div>
+        <div class="row"><span class="k">// languages</span><span class="v">VI primary · EN translated</span></div>
+        <div class="row"><span class="k">// not</span><span class="v muted">hype, "revolutionary", career advice</span></div>
+        <div class="row"><span class="k">// licence</span><span class="v">CC BY 4.0 · code MIT</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>© 2026 leonard.garden · set in Source Serif 4 + Plus Jakarta Sans + JetBrains Mono</span>
+    <span class="links">
+      <a href="/rss.xml">rss</a>
+      <a href="https://github.com/">github</a>
+      <a href="/vi/">VI</a>
+      <a href="/en/">EN</a>
+    </span>
+  </footer>
+</div>
+
+<script>
+  // theme toggle — persists, respects system default if never toggled
+  (() => {
+    const root = document.documentElement;
+    const btn = document.getElementById('theme-toggle');
+    const KEY = 'lg-theme';
+    const saved = localStorage.getItem(KEY);
+    if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+    function current() {
+      const explicit = root.getAttribute('data-theme');
+      if (explicit) return explicit;
+      return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    btn.addEventListener('click', () => {
+      const next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem(KEY, next);
+    });
+  })();
+  document.querySelectorAll('.tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', 'false'));
+      btn.setAttribute('aria-selected', 'true');
+    });
+  });
+  // "/" focuses search
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') {
+      e.preventDefault();
+      document.getElementById('q').focus();
+    }
+  });
+</script>
+
+</body>
+</html>

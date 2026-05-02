@@ -32,22 +32,28 @@ Use these names so pages stay consistent. **Current reference values** (adjust i
 ```css
 :root {
   color-scheme: light dark;
-  --bg: #fafafa;
-  --fg: #1a1a1a;
-  --muted: #5c5c5c;
-  --border: #e5e5e5;
+  --bg: #f4f4f5;
+  --fg: #0c0c0d;
+  --muted: #52525b;
+  --border: #d4d4d8;
   --accent: #2563eb; /* primary blue */
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
   --card: #ffffff;
+  --hero-glow: color-mix(in srgb, var(--accent) 18%, transparent);
+  --grid-dot: #d4d4d8;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0f0f0f;
-    --fg: #f5f5f5;
-    --muted: #a3a3a3;
-    --border: #2a2a2a;
+    --fg: #fafafa;
+    --muted: #a1a1aa;
+    --border: #27272a;
     --accent: #60a5fa;
-    --card: #171717;
+    --accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+    --card: #121214;
+    --hero-glow: color-mix(in srgb, var(--accent) 22%, transparent);
+    --grid-dot: #3f3f46;
   }
 }
 ```

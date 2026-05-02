@@ -2,32 +2,7 @@
  * Shared chrome + long-form prose for articles & notes.
  * Tokens align with DESIGN.md + home / pillar pages.
  */
-:root {
-	color-scheme: light dark;
-	--bg: #f4f4f5;
-	--fg: #0c0c0d;
-	--muted: #52525b;
-	--border: #d4d4d8;
-	--accent: #2563eb;
-	--accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
-	--card: #ffffff;
-	--hero-glow: color-mix(in srgb, var(--accent) 18%, transparent);
-	--grid-dot: #d4d4d8;
-	font-synthesis: none;
-}
-@media (prefers-color-scheme: dark) {
-	:root {
-		--bg: #09090b;
-		--fg: #fafafa;
-		--muted: #a1a1aa;
-		--border: #27272a;
-		--accent: #60a5fa;
-		--accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
-		--card: #121214;
-		--hero-glow: color-mix(in srgb, var(--accent) 22%, transparent);
-		--grid-dot: #3f3f46;
-	}
-}
+@import './tokens.css';
 
 *,
 *::before,
