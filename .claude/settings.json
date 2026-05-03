@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Write(blogs/**)",
+      "Write(notes/**)",
+      "Write(exercises/**)",
+      "Write(src/content/articles/**)",
+      "Edit(progress.md)",
+      "Edit(blogs/**)",
+      "Edit(src/content/articles/**)",
+      "Bash(ls:*)",
+      "Bash(tree:*)",
+      "Bash(cat:*)",
+      "Bash(wc:*)",
+      "WebFetch",
+      "WebSearch"
+    ],
+    "deny": [
+      "Write(.claude/**)",
+      "Edit(CLAUDE.md)",
+      "Bash(rm:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
