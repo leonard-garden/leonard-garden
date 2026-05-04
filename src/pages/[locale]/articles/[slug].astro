@@ -53,7 +53,7 @@ const canonicalUrl =
 const canonicalHtml = buildCanonicalHtml(canonicalUrl);
 const alternateHtml = buildAlternateLinksHtml(alternateItems, xDefaultHref);
 
-const { Content: Cmp } = await render(entry);
+const { Content: Cmp, headings } = await render(entry);
 
 const navLinks = siteConfig.languages.map((l) => {
 	const sibling = allArticles.find(
@@ -80,7 +80,7 @@ const dkA = 'article' as const;
 			ogType={dkA}
 		/>
 	</head>
-	<body class="blog-doc">
+	<body class="article-doc">
 		<BlogChrome
 			siteLocale={locale}
 			title={entry.data.title}
@@ -90,6 +90,7 @@ const dkA = 'article' as const;
 			readingTimeMinutes={entry.data.readingTimeMinutes}
 			pillar={entry.data.pillar}
 			navLinks={navLinks}
+			headings={headings}
 		>
 			<Cmp />
 		</BlogChrome>

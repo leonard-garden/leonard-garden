@@ -10,8 +10,13 @@ export interface LangLink {
 	current: boolean;
 }
 
+export interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
 interface Props {
-	/** Route language (avoid prop name `locale` — JSX tooling can misparse `locale={locale}`). */
 	siteLocale: 'vi' | 'en';
 	title: string;
 	description: string;
@@ -20,6 +25,7 @@ interface Props {
 	readingTimeMinutes?: number;
 	pillar?: string;
 	navLinks: LangLink[];
+	headings?: Heading[];
 }
 
 const {
@@ -31,6 +37,7 @@ const {
 	readingTimeMinutes,
 	pillar,
 	navLinks,
+	headings = [],
 } = Astro.props;
 
 const copy =
@@ -44,6 +51,29 @@ const copy =
 				breadcrumb: 'Đường dẫn',
 				readMinutes: (n: number) => `${n} phút đọc`,
 				pillarHub: 'Chủ đề',
+				contents: 'Mục lục',
+				tweaks: 'Tùy chỉnh',
+				theme: 'Giao diện',
+				reading: 'Đọc',
+				layout: 'Bố cục',
+				bodyFont: 'Font chữ',
+				fontSize: 'Cỡ chữ',
+				width: 'Chiều rộng',
+				tocPosition: 'Mục lục',
+				marginalia: 'Ghi chú lề',
+				light: 'Sáng',
+				dark: 'Tối',
+				serif: 'Serif',
+				sans: 'Sans',
+				compact: 'Nhỏ',
+				comfortable: 'Vừa',
+				spacious: 'Rộng',
+				narrow: '60ch',
+				default: '66ch',
+				wide: '74ch',
+				left: 'Trái',
+				right: 'Phải',
+				hidden: 'Ẩn',
 			}
 		: {
 				skipToContent: 'Skip to content',
@@ -54,6 +84,29 @@ const copy =
 				breadcrumb: 'Breadcrumb',
 				readMinutes: (n: number) => `${n} min read`,
 				pillarHub: 'Topic',
+				contents: 'Contents',
+				tweaks: 'Tweaks',
+				theme: 'Theme',
+				reading: 'Reading',
+				layout: 'Layout',
+				bodyFont: 'Body font',
+				fontSize: 'Font size',
+				width: 'Width',
+				tocPosition: 'TOC',
+				marginalia: 'Marginalia',
+				light: 'Light',
+				dark: 'Dark',
+				serif: 'Serif',
+				sans: 'Sans',
+				compact: 'Compact',
+				comfortable: 'Cozy',
+				spacious: 'Spacious',
+				narrow: '60ch',
+				default: '66ch',
+				wide: '74ch',
+				left: 'Left',
+				right: 'Right',
+				hidden: 'Hidden',
 			};
 
 const dateLocale = routeLocale === 'vi' ? 'vi-VN' : 'en-US';
@@ -83,41 +136,276 @@ const readingTimeHtml =
 	readingTimeMinutes != null
 		? `<span>${esc(copy.readMinutes(readingTimeMinutes))}</span>`
 		: '';
+
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
-<div class="page-bg" aria-hidden="true"></div>
-<div class="shell">
-	<a class="skip" href="#main-content">{copy.skipToContent}</a>
+<a class="skip" href="#main-content">{copy.skipToContent}</a>
 
-	<header class="top">
-		<a class="brand" href={`/${routeLocale}/`}>{siteConfig.name}</a>
-		<nav class="locale-switch" aria-label={copy.navLabel} set:html={navLinksHtml} />
-	</header>
+<header class="site-bar">
+	<a class="brand" href={`/${routeLocale}/`}>{siteConfig.name}</a>
+	<nav class="locale-switch" aria-label={copy.navLabel} set:html={navLinksHtml} />
+</header>
 
-	<nav class="crumb" aria-label={copy.breadcrumb}>
-		<a href={`/${routeLocale}/`}>{copy.home}</a>
-		<span class="sep">/</span>
-		<a href={`/${routeLocale}/#${sectionId}`}>{sectionLabel}</a>
-		<span class="sep">/</span>
-		<span style="color: var(--fg); font-weight: 600;">{title}</span>
-	</nav>
+<div class="article-layout" id="article-layout" data-toc="left" data-margin="false">
+	<aside class="toc-rail" aria-label={copy.contents}>
+		{tocHeadings.length > 0 && (
+			<>
+				<p class="toc-label">{copy.contents}</p>
+				<ul class="toc-nav">
+					{tocHeadings.map((h) => (
+						<li class={h.depth === 3 ? 'toc-h3' : 'toc-h2'}>
+							<a href={`#${h.slug}`}>{h.text}</a>
+						</li>
+					))}
+				</ul>
+			</>
+		)}
+	</aside>
 
-	<header class="doc-header">
-		<Fragment set:html={pillarHtml} />
-		<h1>{title}</h1>
-		<p class="lede">{description}</p>
-		<div class="doc-meta">
-			<time datetime={isoDate}>{dateLabel}</time>
-			<Fragment set:html={readingTimeHtml} />
-		</div>
-	</header>
+	<div class="article-body">
+		<nav class="crumb" aria-label={copy.breadcrumb}>
+			<a href={`/${routeLocale}/`}>{copy.home}</a>
+			<span class="sep">/</span>
+			<a href={`/${routeLocale}/#${sectionId}`}>{sectionLabel}</a>
+			<span class="sep">/</span>
+			<span style="color: var(--ink); font-weight: 600;">{title}</span>
+		</nav>
 
-	<main id="main-content" class="prose">
-		<slot />
-	</main>
+		<header class="doc-header">
+			<Fragment set:html={pillarHtml} />
+			<h1>{title}</h1>
+			<p class="lede">{description}</p>
+			<div class="doc-meta">
+				<time datetime={isoDate}>{dateLabel}</time>
+				<Fragment set:html={readingTimeHtml} />
+			</div>
+		</header>
 
-	<footer class="foot">
-		© {new Date().getFullYear()}
-		{siteConfig.name} · {copy.navLabel}: {routeLocale.toUpperCase()}
-	</footer>
+		<main id="main-content" class="prose">
+			<slot />
+		</main>
+
+		<footer class="doc-foot">
+			© {new Date().getFullYear()}
+			{siteConfig.name}
+		</footer>
+	</div>
+
+	<aside class="margin-rail" aria-hidden="true"></aside>
 </div>
+
+<!-- Tweaks panel -->
+<div class="tweaks-panel">
+	<div class="tweaks-body" id="tweaks-body" role="dialog" aria-label={copy.tweaks}>
+		<div class="tweaks-section">
+			<p class="tweaks-section-label">{copy.theme}</p>
+			<div class="tweaks-row">
+				<div class="tweaks-radio-group" data-tweak="theme">
+					<button data-value="light">{copy.light}</button>
+					<button data-value="dark">{copy.dark}</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="tweaks-divider"></div>
+
+		<div class="tweaks-section">
+			<p class="tweaks-section-label">{copy.reading}</p>
+			<div class="tweaks-row">
+				<p class="tweaks-row-label">{copy.bodyFont}</p>
+				<div class="tweaks-radio-group" data-tweak="bodyFont">
+					<button data-value="sans">{copy.sans}</button>
+					<button data-value="serif">{copy.serif}</button>
+				</div>
+			</div>
+			<div class="tweaks-row">
+				<p class="tweaks-row-label">{copy.fontSize}</p>
+				<div class="tweaks-radio-group" data-tweak="fontSize">
+					<button data-value="compact">{copy.compact}</button>
+					<button data-value="comfortable">{copy.comfortable}</button>
+					<button data-value="spacious">{copy.spacious}</button>
+				</div>
+			</div>
+			<div class="tweaks-row">
+				<p class="tweaks-row-label">{copy.width}</p>
+				<div class="tweaks-radio-group" data-tweak="readingWidth">
+					<button data-value="narrow">{copy.narrow}</button>
+					<button data-value="default">{copy.default}</button>
+					<button data-value="wide">{copy.wide}</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="tweaks-divider"></div>
+
+		<div class="tweaks-section">
+			<p class="tweaks-section-label">{copy.layout}</p>
+			<div class="tweaks-row">
+				<p class="tweaks-row-label">{copy.tocPosition}</p>
+				<div class="tweaks-radio-group" data-tweak="tocPosition">
+					<button data-value="left">{copy.left}</button>
+					<button data-value="right">{copy.right}</button>
+					<button data-value="hidden">{copy.hidden}</button>
+				</div>
+			</div>
+			<div class="tweaks-toggle-row">
+				<span class="tweaks-toggle-row-label">{copy.marginalia}</span>
+				<button class="tweaks-pill-toggle" id="margin-toggle" aria-pressed="false"></button>
+			</div>
+		</div>
+	</div>
+
+	<button class="tweaks-toggle" id="tweaks-toggle" aria-expanded="false" aria-controls="tweaks-body">
+		<svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+			<circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+			<path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+		</svg>
+		{copy.tweaks}
+	</button>
+</div>
+
+<script is:inline>
+(function () {
+	var STORAGE_KEY = 'lg-tweaks';
+	var DEFAULTS = {
+		theme: 'light',
+		bodyFont: 'sans',
+		fontSize: 'comfortable',
+		readingWidth: 'default',
+		tocPosition: 'left',
+		margin: false,
+	};
+
+	var SIZES = {
+		compact:     { size: '15.5px', line: 1.6 },
+		comfortable: { size: '17px',   line: 1.72 },
+		spacious:    { size: '18.5px', line: 1.8 },
+	};
+
+	var WIDTHS = { narrow: '60ch', default: '66ch', wide: '74ch' };
+
+	function load() {
+		try {
+			var raw = localStorage.getItem(STORAGE_KEY);
+			return raw ? Object.assign({}, DEFAULTS, JSON.parse(raw)) : Object.assign({}, DEFAULTS);
+		} catch (e) {
+			return Object.assign({}, DEFAULTS);
+		}
+	}
+
+	function save(t) {
+		try { localStorage.setItem(STORAGE_KEY, JSON.stringify(t)); } catch (e) {}
+	}
+
+	function applyTweaks(t) {
+		var root = document.documentElement;
+		var layout = document.getElementById('article-layout');
+
+		root.setAttribute('data-theme', t.theme);
+
+		var s = SIZES[t.fontSize] || SIZES.comfortable;
+		root.style.setProperty('--t-body-size', s.size);
+		root.style.setProperty('--t-body-line', String(s.line));
+
+		var sans = getComputedStyle(root).getPropertyValue('--sans').trim();
+		var serif = getComputedStyle(root).getPropertyValue('--serif').trim();
+		root.style.setProperty('--t-body-fam', t.bodyFont === 'serif' ? serif : sans);
+
+		root.style.setProperty('--t-prose-w', WIDTHS[t.readingWidth] || WIDTHS.default);
+
+		if (layout) {
+			layout.setAttribute('data-toc', t.tocPosition);
+			layout.setAttribute('data-margin', t.margin ? 'true' : 'false');
+		}
+	}
+
+	function syncUI(t) {
+		document.querySelectorAll('[data-tweak]').forEach(function (group) {
+			var key = group.getAttribute('data-tweak');
+			group.querySelectorAll('button').forEach(function (btn) {
+				if (btn.getAttribute('data-value') === String(t[key])) {
+					btn.setAttribute('data-active', '');
+				} else {
+					btn.removeAttribute('data-active');
+				}
+			});
+		});
+
+		var marginBtn = document.getElementById('margin-toggle');
+		if (marginBtn) {
+			if (t.margin) {
+				marginBtn.setAttribute('data-active', '');
+				marginBtn.setAttribute('aria-pressed', 'true');
+			} else {
+				marginBtn.removeAttribute('data-active');
+				marginBtn.setAttribute('aria-pressed', 'false');
+			}
+		}
+	}
+
+	var tweaks = load();
+	applyTweaks(tweaks);
+
+	document.addEventListener('DOMContentLoaded', function () {
+		applyTweaks(tweaks);
+		syncUI(tweaks);
+
+		// Toggle panel
+		var toggleBtn = document.getElementById('tweaks-toggle');
+		var body = document.getElementById('tweaks-body');
+		if (toggleBtn && body) {
+			toggleBtn.addEventListener('click', function () {
+				var open = body.classList.toggle('open');
+				toggleBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+			});
+			document.addEventListener('click', function (e) {
+				if (!toggleBtn.contains(e.target) && !body.contains(e.target)) {
+					body.classList.remove('open');
+					toggleBtn.setAttribute('aria-expanded', 'false');
+				}
+			});
+		}
+
+		// Radio groups
+		document.querySelectorAll('[data-tweak]').forEach(function (group) {
+			var key = group.getAttribute('data-tweak');
+			group.querySelectorAll('button').forEach(function (btn) {
+				btn.addEventListener('click', function () {
+					tweaks[key] = btn.getAttribute('data-value');
+					save(tweaks);
+					applyTweaks(tweaks);
+					syncUI(tweaks);
+				});
+			});
+		});
+
+		// Margin toggle
+		var marginBtn = document.getElementById('margin-toggle');
+		if (marginBtn) {
+			marginBtn.addEventListener('click', function () {
+				tweaks.margin = !tweaks.margin;
+				save(tweaks);
+				applyTweaks(tweaks);
+				syncUI(tweaks);
+			});
+		}
+
+		// TOC active link on scroll
+		var headingEls = document.querySelectorAll('.prose h2[id], .prose h3[id]');
+		var tocLinks = document.querySelectorAll('.toc-nav a');
+		if (headingEls.length && tocLinks.length) {
+			var observer = new IntersectionObserver(function (entries) {
+				entries.forEach(function (entry) {
+					if (entry.isIntersecting) {
+						tocLinks.forEach(function (a) { a.classList.remove('toc-active'); });
+						var active = document.querySelector('.toc-nav a[href="#' + entry.target.id + '"]');
+						if (active) active.classList.add('toc-active');
+					}
+				});
+			}, { rootMargin: '-20% 0px -70% 0px' });
+			headingEls.forEach(function (el) { observer.observe(el); });
+		}
+	});
+})();
+</script>

@@ -1,0 +1,10 @@
+/**
+ * Tweakable article reading vars — defaults; overridden at runtime by the tweaks panel.
+ * compact: 15.5px/1.6 | comfortable: 17px/1.7 | spacious: 18.5px/1.8
+ */
+:root {
+	--t-body-size: 17px;
+	--t-body-line: 1.72;
+	--t-body-fam: var(--sans);
+	--t-prose-w: 66ch;
+}
