@@ -14,13 +14,13 @@
       "Bash(cat:*)",
       "Bash(wc:*)",
       "WebFetch",
-      "WebSearch"
+      "WebSearch",
+      "Bash(git push:*)"
     ],
     "deny": [
       "Write(.claude/**)",
       "Edit(CLAUDE.md)",
-      "Bash(rm:*)",
-      "Bash(git push:*)"
+      "Bash(rm:*)"
     ]
   }
 }
