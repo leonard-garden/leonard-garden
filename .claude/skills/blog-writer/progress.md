@@ -7,6 +7,7 @@
 | 01 | Token & Tokenization | ✅ | ✅ |
 | 02 | Context Window | ✅ | ✅ |
 | 03 | Attention / Lost in the Middle | ✅ | ✅ |
+| 04 | Temperature / Top-p | ✅ | ✅ |
 
 ## 01 — Claude Code Core
 
