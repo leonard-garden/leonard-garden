@@ -18,7 +18,7 @@
 | 03 | System vs User prompt | system-vs-user-prompt | ✅ | - | - | - | - | - |
 | 04 | Tool use / Function calling | tool-use | - | - | - | - | - | - |
 | 05 | Agent loop / ReAct | agent-loop | - | - | - | - | - | - |
-| 06 | Hallucination & Grounding | hallucination-grounding | - | - | - | - | - | - |
+| 06 | Hallucination & Grounding | hallucination-grounding | ✅ | - | - | - | - | - |
 | 07 | In-context learning | in-context-learning | ✅ | - | - | - | - | - |
 | 08 | Chain of Thought | chain-of-thought | - | - | - | - | - | - |
 | 09 | Determinism in LLMs | determinism | - | - | - | - | - | - |
