@@ -1,8 +1,8 @@
 # Progress: Học Sâu Claude Code
 
 ## Tổng quan
-- Total: 30 keywords
-- Written: 4/30
+- Total: 31 keywords
+- Written: 5/31
 - Read: 0/30
 - Self-tested: 0/30
 - Exercise done: 0/30
@@ -20,7 +20,8 @@
 | 05 | Agent loop / ReAct | agent-loop | - | - | - | - | - | - |
 | 06 | Hallucination & Grounding | hallucination-grounding | ✅ | - | - | - | - | - |
 | 07 | In-context learning | in-context-learning | ✅ | - | - | - | - | - |
-| 08 | Chain of Thought | chain-of-thought | - | - | - | - | - | - |
+| 08 | Grounding (Citations, RAG) | grounding | ✅ | - | - | - | - | - |
+| 08b | Chain of Thought | chain-of-thought | - | - | - | - | - | - |
 | 09 | Determinism in LLMs | determinism | - | - | - | - | - | - |
 | 10 | Prompt injection | prompt-injection | - | - | - | - | - | - |
 
