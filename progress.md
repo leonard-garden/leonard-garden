@@ -2,7 +2,7 @@
 
 ## Tổng quan
 - Total: 30 keywords
-- Written: 3/30
+- Written: 4/30
 - Read: 0/30
 - Self-tested: 0/30
 - Exercise done: 0/30
@@ -19,7 +19,7 @@
 | 04 | Tool use / Function calling | tool-use | - | - | - | - | - | - |
 | 05 | Agent loop / ReAct | agent-loop | - | - | - | - | - | - |
 | 06 | Hallucination & Grounding | hallucination-grounding | - | - | - | - | - | - |
-| 07 | In-context learning | in-context-learning | - | - | - | - | - | - |
+| 07 | In-context learning | in-context-learning | ✅ | - | - | - | - | - |
 | 08 | Chain of Thought | chain-of-thought | - | - | - | - | - | - |
 | 09 | Determinism in LLMs | determinism | - | - | - | - | - | - |
 | 10 | Prompt injection | prompt-injection | - | - | - | - | - | - |
