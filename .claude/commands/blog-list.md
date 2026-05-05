@@ -1,19 +1,19 @@
 ---
-description: Xem progress 30 keywords trong lộ trình học
+description: View progress for 30 keywords in the learning roadmap
 ---
 
 # /blog-list Command
 
 ## Workflow
 
-1. Đọc `progress.md`
-2. Tính:
-   - Tổng đã written / 30
-   - Đã read / 30
-   - Đã làm exercise / 30
-   - Keywords cho tuần hiện tại (theo timeline gợi ý)
-3. Liệt kê:
-   - 5 keyword **next up** (chưa làm)
-   - 3 keyword **cần review D+7**
-   - 3 keyword **cần review D+30**
-4. Output dạng table dễ scan
+1. Read `progress.md`
+2. Calculate:
+   - Total written / 30
+   - Total read / 30
+   - Total exercises done / 30
+   - Keywords for the current week (based on suggested timeline)
+3. List:
+   - 5 **next up** keywords (not started)
+   - 3 keywords **needing D+7 review**
+   - 3 keywords **needing D+30 review**
+4. Output as an easy-to-scan table

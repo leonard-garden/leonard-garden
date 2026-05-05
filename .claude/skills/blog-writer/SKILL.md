@@ -1,56 +1,56 @@
 ---
 name: blog-writer
-description: Viết bài blog học sâu về 1 keyword Claude Code/LLM engineering theo template 10 phần. Dùng khi user gõ /blog hoặc yêu cầu viết tài liệu học có cấu trúc, không phải bài viết generic.
+description: Write a deep-learning blog post for a Claude Code/LLM engineering keyword using a 10-part template. Use when the user types /blog or requests structured learning documentation, not generic articles.
 ---
 
 # Skill: Blog Writer
 
-## Khi nào skill này active
-- User gõ `/blog [keyword]`
-- User yêu cầu rõ ràng "viết blog học sâu về X"
+## When this skill is active
+- User types `/blog [keyword]`
+- User explicitly requests "write a deep-learning blog post about X"
 
-## KHÔNG dùng skill này khi
-- User chỉ hỏi giải thích nhanh (trả lời inline)
-- User muốn bài viết casual, không cần cấu trúc
+## Do NOT use this skill when
+- User just wants a quick explanation (reply inline)
+- User wants a casual write-up without structure
 
-## Workflow bắt buộc
+## Required workflow
 
-### Bước 1: Load context
-Đọc các file sau trong skill folder:
-- `TEMPLATE.md` — cấu trúc 10 phần
-- `STYLE_GUIDE.md` — quy tắc tone, format
-- `CHECKLIST.md` — self-check trước xuất
+### Step 1: Load context
+Read the following files in the skill folder:
+- `TEMPLATE.md` — 10-part structure
+- `STYLE_GUIDE.md` — tone and format rules
+- `CHECKLIST.md` — self-check before output
 
-### Bước 2: Research keyword (nếu cần)
-- Concept LLM cơ bản: dùng knowledge có sẵn
-- Claude Code-specific (MCP, hooks, skills...): web search docs.anthropic.com để verify
-- Số liệu cụ thể (giá, version, limits): BẮT BUỘC verify
+### Step 2: Research keyword (if needed)
+- Basic LLM concepts: use existing knowledge
+- Claude Code-specific (MCP, hooks, skills...): web search docs.anthropic.com to verify
+- Specific numbers (pricing, versions, limits): MUST verify
 
-### Bước 3: Viết bài theo TEMPLATE
-- Tuân thủ ĐÚNG cấu trúc 10 phần
-- Tuân thủ STYLE_GUIDE
-- Mỗi ví dụ phải có code/config thật, runnable
+### Step 3: Write post following TEMPLATE
+- Follow the EXACT 10-part structure
+- Follow STYLE_GUIDE
+- Every example must have real, runnable code/config
 
-### Bước 4: Self-check theo CHECKLIST
-- Đi qua từng mục checklist
-- Nếu fail bất kỳ mục nào → revise, không xuất
+### Step 4: Self-check against CHECKLIST
+- Go through every checklist item
+- If any item fails → revise, do not output
 
-### Bước 5: Output
-- Save vào path do command chỉ định
+### Step 5: Output
+- Save to the path specified by the command
 - Update progress.md
-- Báo user
+- Report to user
 
-## Quy tắc CỨNG (không bao giờ vi phạm)
+## HARD rules (never violate)
 
-1. **KHÔNG bịa**. Số liệu chưa chắc → search hoặc nói "không chắc"
-2. **KHÔNG fluff**. Mỗi câu phải có thông tin
-3. **KHÔNG skip "Khi nào KHÔNG dùng"** — đây là phần test mastery
-4. **KHÔNG skip "Gotchas"** — đây là giá trị thực tế của bài
-5. **KHÔNG đặt đáp án self-test ở giữa bài** — phải ở CUỐI cùng
-6. **KHÔNG vượt 1800 từ**
-7. **KHÔNG dùng câu sáo rỗng** liệt kê trong STYLE_GUIDE
+1. **DO NOT fabricate**. Unsure about a number → search or say "not certain"
+2. **DO NOT add fluff**. Every sentence must carry information
+3. **DO NOT skip "When NOT to use"** — this tests mastery
+4. **DO NOT skip "Gotchas"** — this is the real-world value of the post
+5. **DO NOT place self-test answers in the middle** — they must go at THE VERY END
+6. **DO NOT exceed 1800 words**
+7. **DO NOT use clichéd phrases** listed in STYLE_GUIDE
 
-## Khi gặp keyword không rõ
-HỎI user thay vì đoán:
-- "Keyword này chưa có trong lộ trình. Bạn muốn thêm vào category nào?"
-- "Tôi không tìm thấy info đáng tin về X. Bạn có nguồn không?"
+## When the keyword is unclear
+ASK the user instead of guessing:
+- "This keyword isn't in the roadmap. Which category should it go in?"
+- "I can't find reliable info about X. Do you have a source?"

@@ -1,30 +1,30 @@
 ---
-description: Tự review bài blog đã viết, đưa critique và suggestion
+description: Self-review a written blog post, provide critique and suggestions
 argument-hint: [path-to-blog-file]
 ---
 
 # /blog-review Command
 
-User muốn review bài: **$ARGUMENTS**
+User wants to review post: **$ARGUMENTS**
 
 ## Workflow
 
-1. Đọc file blog tại path user cung cấp
+1. Read the blog file at the path provided by the user
 2. Load `.claude/skills/blog-writer/CHECKLIST.md`
-3. Check từng mục trong checklist với bài thực tế
-4. Đưa report dạng:
+3. Check each item in the checklist against the actual post
+4. Produce a report in the format:
 
 ```
 # Review Report: <filename>
 
-## ✅ Đạt
-- [Mục checklist pass]
+## ✅ Passed
+- [Checklist items that pass]
 
-## ⚠️ Cần cải thiện
-- [Mục có vấn đề] → Suggestion cụ thể
+## ⚠️ Needs improvement
+- [Items with issues] → Specific suggestion
 
-## ❌ Fail
-- [Mục fail] → Phải sửa
+## ❌ Failed
+- [Failed items] → Must fix
 
 ## Verdict
 [PASS | NEEDS_REVISION | FAIL]
@@ -35,4 +35,4 @@ User muốn review bài: **$ARGUMENTS**
 3. ...
 ```
 
-5. KHÔNG tự động sửa file. Để user quyết định.
+5. DO NOT auto-fix the file. Let the user decide.
