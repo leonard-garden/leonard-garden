@@ -2,7 +2,7 @@
 
 ## Tổng quan
 - Total: 30 keywords
-- Written: 2/30
+- Written: 3/30
 - Read: 0/30
 - Self-tested: 0/30
 - Exercise done: 0/30
@@ -15,7 +15,7 @@
 |---|---------|------|---------|------|-----------|----------|-----|------|
 | 01 | Token / Tokenization | token-tokenization | ✅ | - | - | - | - | - |
 | 02 | Context window | context-window | ✅ | - | - | - | - | - |
-| 03 | System vs User prompt | system-vs-user-prompt | - | - | - | - | - | - |
+| 03 | System vs User prompt | system-vs-user-prompt | ✅ | - | - | - | - | - |
 | 04 | Tool use / Function calling | tool-use | - | - | - | - | - | - |
 | 05 | Agent loop / ReAct | agent-loop | - | - | - | - | - | - |
 | 06 | Hallucination & Grounding | hallucination-grounding | - | - | - | - | - | - |
