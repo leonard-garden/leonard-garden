@@ -15,7 +15,10 @@
       "Bash(wc:*)",
       "WebFetch",
       "WebSearch",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr view:*)"
     ],
     "deny": [
       "Write(.claude/**)",

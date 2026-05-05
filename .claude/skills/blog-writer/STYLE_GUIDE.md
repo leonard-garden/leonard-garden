@@ -1,73 +1,73 @@
-# Style Guide — Quy tắc viết blog
+# Style Guide — Blog Writing Rules
 
-## Ngôn ngữ
-- Tiếng Việt là chính
-- Technical terms giữ tiếng Anh: "context window", "tokenization", "agent loop", không dịch
-- Khi term xuất hiện lần đầu: viết kèm giải thích ngắn
+## Language
+- Vietnamese (VI) is the primary language for the VI version
+- Technical terms stay in English: "context window", "tokenization", "agent loop" — do not translate
+- When a term appears for the first time: write it with a short explanation
 
 ## Tone
-- Direct, có chính kiến
-- Không vòng vo, không hedging quá mức
-- Khi không chắc → nói thẳng "tôi không chắc về X"
+- Direct, opinionated
+- No hedging or excessive uncertainty
+- When unsure → say it plainly: "I'm not certain about X"
 
-## Câu
-- Ngắn (15-25 từ là tối ưu)
-- Tránh câu phức ≥3 mệnh đề
+## Sentences
+- Short (15-25 words is optimal)
+- Avoid sentences with ≥3 clauses
 - Active voice > passive voice
 
-## Đại từ
-- "Bạn" cho người đọc
-- KHÔNG dùng "chúng ta", "chúng tôi"
-- KHÔNG dùng "mình"
+## Pronouns
+- "Bạn" (you) for the reader in VI; "you" in EN
+- Do NOT use "chúng ta" / "we" / "us"
+- Do NOT use "mình"
 
 ## Code blocks
-- Có syntax highlight: ```python, ```bash, ```json, ```markdown
-- Code phải runnable, không pseudo-code (trừ khi giải thích concept)
-- Comment trong code bằng tiếng Việt OK
+- Use syntax highlighting: ```python, ```bash, ```json, ```markdown
+- Code must be runnable, not pseudo-code (except when explaining a concept)
+- Comments in code: Vietnamese for VI version, English for EN version
 
-## Bảng
-- Dùng cho SO SÁNH, không cho narrative
-- Tối thiểu 2 cột, tối đa 5 cột
-- Header phải rõ ràng
+## Tables
+- Use for COMPARISONS, not for narrative
+- Minimum 2 columns, maximum 5 columns
+- Headers must be clear
 
 ## Bullet points
-- Dùng khi ≥3 items song song
-- Mỗi bullet 1 ý, dài 1-2 dòng
-- KHÔNG nested >2 levels
+- Use when ≥3 parallel items
+- One idea per bullet, 1-2 lines long
+- Do NOT nest more than 2 levels deep
 
 ## Bold & Italic
-- **Bold**: chỉ keyword chính, định nghĩa quan trọng (max 5 lần/bài)
-- *Italic*: nhấn mạnh nhẹ, foreign terms
+- **Bold**: only main keywords, important definitions (max 5 times per post)
+- *Italic*: light emphasis, foreign terms
 
-## Heading
-- H1: chỉ tiêu đề bài
-- H2: section chính (mỗi phần trong 10 phần)
-- H3: sub-section
-- Tránh H4+
+## Headings
+- H1: article title only
+- H2: main sections (each of the 10 parts)
+- H3: sub-sections
+- Avoid H4+
 
-## Anti-patterns NGHIÊM CẤM
+## Anti-patterns — STRICTLY FORBIDDEN
 
-### Câu sáo rỗng
+### Clichéd openers (Vietnamese examples)
 - ❌ "Trong thời đại AI ngày nay..."
 - ❌ "Như chúng ta đã biết..."
 - ❌ "Đây là một khái niệm rất quan trọng..."
 - ❌ "Hãy cùng tìm hiểu..."
 - ❌ "Trước khi đi vào chi tiết..."
 
-### Filler
+### Filler (Vietnamese examples)
 - ❌ "Nói một cách đơn giản..."
 - ❌ "Về cơ bản..."
 - ❌ "Như đã đề cập ở trên..."
 
 ### Vague claims
-- ❌ "Nó rất hữu ích trong nhiều trường hợp"
-- ✅ "Nó hữu ích trong 3 trường hợp: A, B, C"
+- ❌ "It's very useful in many cases"
+- ✅ "It's useful in 3 cases: A, B, C"
 
-### Definition lặp
-- ❌ Định nghĩa lại keyword 3 lần ở 3 phần khác nhau
-- ✅ Định nghĩa 1 lần ở phần 2, các phần sau dùng tham chiếu
+### Repeated definitions
+- ❌ Defining the keyword 3 times in 3 different sections
+- ✅ Define once in Part 2, reference it in later parts
 
-## Độ dài
-- Mục tiêu: 1200-1800 từ
-- Dưới 1000: thiếu sâu
-- Trên 2000: lan man, cắt bớt
+## Length
+- Target: 1200-1800 words
+- Under 1000: not deep enough
+- Over 2000: rambling — cut it down

@@ -1,80 +1,80 @@
-# Blog Template — Cấu trúc 10 phần
+# Blog Template — 10-Part Structure
 
-Mỗi bài blog PHẢI có đủ 10 phần này, theo đúng thứ tự.
+Every blog post MUST include all 10 parts, in the exact order below.
 
 ---
 
-## Phần 0: TL;DR
-- ĐÚNG 3 câu, không hơn không kém
-- Đọc 30 giây hiểu keyword là gì
-- KHÔNG có ví dụ, KHÔNG có chi tiết
+## Part 0: TL;DR
+- EXACTLY 3 sentences, no more no less
+- Readable in 30 seconds — what is this keyword?
+- NO examples, NO details
 
-## Phần 1: Vấn đề nó giải quyết
-- Trước khi có [keyword], pain point là gì?
-- 1 tình huống cụ thể developer gặp phải (như câu chuyện ngắn)
-- Tại sao pain này quan trọng
+## Part 1: The problem it solves
+- Before [keyword] existed, what was the pain point?
+- 1 specific scenario a developer ran into (like a short story)
+- Why this pain matters
 
-## Phần 2: Định nghĩa chính xác
-- Định nghĩa kỹ thuật ngắn gọn (3-5 câu)
-- Phân biệt với khái niệm dễ nhầm lẫn (nếu có)
-- Etymology nếu thú vị (vd: BPE viết tắt từ gì)
+## Part 2: Precise definition
+- Short technical definition (3-5 sentences)
+- Distinguish from easily-confused concepts (if any)
+- Etymology if interesting (e.g. what BPE stands for)
 
-## Phần 3: Cơ chế hoạt động
-- Step-by-step cách nó work
-- Sơ đồ ASCII hoặc flow diagram (nếu phù hợp)
-- Giải thích "dưới capo"
+## Part 3: How it works
+- Step-by-step explanation
+- ASCII diagram or flow diagram (when appropriate)
+- Explain "under the hood"
 
-## Phần 4: Ví dụ cụ thể
-- Tối thiểu 2 ví dụ:
-  - Ví dụ 1: đơn giản nhất minh họa concept
-  - Ví dụ 2: tình huống thực tế
-- Code/config phải runnable, không pseudo
-- Kèm output mong đợi nếu có
+## Part 4: Concrete examples
+- Minimum 2 examples:
+  - Example 1: simplest possible illustration of the concept
+  - Example 2: real-world scenario
+- Code/config must be runnable, not pseudo-code
+- Include expected output when relevant
 
-## Phần 5: Khi nào dùng (3 tình huống)
-- Tình huống 1: scenario + lý do
-- Tình huống 2: scenario + lý do
-- Tình huống 3: scenario + lý do
+## Part 5: When to use (3 scenarios)
+- Scenario 1: context + reason
+- Scenario 2: context + reason
+- Scenario 3: context + reason
 
-## Phần 6: Khi nào KHÔNG dùng (2-3 anti-patterns)
-- Anti-pattern 1: tại sao sai + nên dùng gì thay
-- Anti-pattern 2: tại sao sai + nên dùng gì thay
+## Part 6: When NOT to use (2-3 anti-patterns)
+- Anti-pattern 1: why it's wrong + what to use instead
+- Anti-pattern 2: why it's wrong + what to use instead
 - (Optional) Anti-pattern 3
 
-## Phần 7: Gotchas & Pitfalls
-- 3-5 cạm bẫy thực tế
-- Mỗi cạm bẫy: mô tả + cách phát hiện + cách fix
+## Part 7: Gotchas & Pitfalls
+- 3-5 real-world traps
+- Each trap: description + how to detect + how to fix
 
-## Phần 8: Kết nối với keyword khác
-- 3-5 keyword liên quan
-- Quan hệ rõ ràng: cha/con, song song, dependency, trái ngược
-- Format: `→ [Keyword X]: quan hệ Y`
+## Part 8: Connections to other keywords
+- 3-5 related keywords
+- Relationship clearly stated: parent/child, parallel, dependency, opposite
+- Format: `→ [Keyword X]: relationship Y`
 
-## Phần 9: Self-test (5 câu hỏi MỞ)
-- Q1: Định nghĩa lại bằng lời bạn (test recall)
-- Q2: Tình huống cụ thể nên dùng (test application)
-- Q3: Khi nào KHÔNG dùng (test boundary)
-- Q4: So sánh với keyword khác đã học (test connection)
-- Q5: Predict edge case / future (test extrapolation)
+## Part 9: Self-test (5 OPEN questions)
+- Q1: Re-define in your own words (tests recall)
+- Q2: Specific scenario where you'd use this (tests application)
+- Q3: When would you NOT use this (tests boundaries)
+- Q4: Compare with another keyword you've learned (tests connections)
+- Q5: Predict an edge case / future evolution (tests extrapolation)
 
-KHÔNG dùng câu hỏi Y/N. KHÔNG dùng câu hỏi multiple choice.
+Do NOT use Y/N questions. Do NOT use multiple choice.
 
-## Phần 10: Bài tập áp dụng (24h challenge)
-- Task cụ thể, có thể làm trong 30-60 phút
-- Acceptance criteria rõ ràng (3-5 tiêu chí)
+## Part 10: Exercise (24h challenge)
+- A concrete task, doable in 30-60 minutes
+- Clear acceptance criteria (3-5 criteria)
 - Estimated time
-- Hint nếu task khó (optional)
+- Hint if the task is hard (optional)
 
 ---
 
-## Phần Cuối: Đáp án Self-test
+## Final Section: Self-test Answers
 
-ĐẶT Ở CUỐI CÙNG, sau bài tập. Mục đích: người đọc tự trả lời trước khi xem.
+PLACE AT THE VERY END, after the exercise. Purpose: reader answers first, then checks.
 
 Format:
 ```
 ---
-## Đáp án Self-test (đọc sau khi tự trả lời)
+## Self-test Answers (read after answering on your own)
 
 **Q1**: ...
 **Q2**: ...
