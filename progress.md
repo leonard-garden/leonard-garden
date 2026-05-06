@@ -16,7 +16,7 @@
 | 01 | Token / Tokenization | token-tokenization | ✅ | - | - | - | - | - |
 | 02 | Context window | context-window | ✅ | - | - | - | - | - |
 | 03 | System vs User prompt | system-vs-user-prompt | ✅ | - | - | - | - | - |
-| 04 | Tool use / Function calling | tool-use | - | - | - | - | - | - |
+| 04 | Tool use / Function calling | tool-use | ✅ | - | - | - | - | - |
 | 05 | Agent loop / ReAct | agent-loop | ✅ | - | - | - | - | - |
 | 06 | Hallucination & Grounding | hallucination-grounding | ✅ | - | - | - | - | - |
 | 07 | In-context learning | in-context-learning | ✅ | - | - | - | - | - |
