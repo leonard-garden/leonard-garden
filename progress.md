@@ -1,8 +1,8 @@
 # Progress: Học Sâu Claude Code
 
 ## Tổng quan
-- Total: 31 keywords
-- Written: 6/31
+- Total: 32 keywords
+- Written: 7/32
 - Read: 0/30
 - Self-tested: 0/30
 - Exercise done: 0/30
@@ -17,6 +17,7 @@
 | 02 | Context window | context-window | ✅ | - | - | - | - | - |
 | 03 | System vs User prompt | system-vs-user-prompt | ✅ | - | - | - | - | - |
 | 04 | Tool use / Function calling | tool-use | ✅ | - | - | - | - | - |
+| 04b | Multi-turn vs Single-turn | multi-turn | ✅ | - | - | - | - | - |
 | 05 | Agent loop / ReAct | agent-loop | ✅ | - | - | - | - | - |
 | 06 | Hallucination & Grounding | hallucination-grounding | ✅ | - | - | - | - | - |
 | 07 | In-context learning | in-context-learning | ✅ | - | - | - | - | - |
