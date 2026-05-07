@@ -1,6 +1,6 @@
 ---
 title: "Self-consistency: Bỏ phiếu đa số để tăng độ chính xác"
-description: "Self-consistency là kỹ thuật prompting chạy cùng một câu hỏi nhiều lần, thu thập nhiều chuỗi lập luận khác nhau, rồi chọn câu trả lời xuất hiện nhiều nhất. Kỹ thuật này xây trên Chain of Thought và đặc biệt hiệu quả với bài toán toán học, logic, và suy luận nhiều bước. Thay vì tin vào một câu trả lời duy nhất, bạn để model "tự bỏ phiếu" để chọn kết quả tin cậy nhất."
+description: "Self-consistency là kỹ thuật prompting chạy cùng một câu hỏi nhiều lần, thu thập nhiều chuỗi lập luận khác nhau, rồi chọn câu trả lời xuất hiện nhiều nhất. Kỹ thuật này xây trên Chain of Thought và đặc biệt hiệu quả với bài toán toán học, logic, và suy luận nhiều bước. Thay vì tin vào một câu trả lời duy nhất, bạn để model tự bỏ phiếu để chọn kết quả tin cậy nhất."
 locale: "vi"
 translationKey: "self-consistency"
 publishedAt: 2026-05-07
