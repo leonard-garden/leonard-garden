@@ -2,7 +2,7 @@
 
 ## Tổng quan
 - Total: 33 keywords
-- Written: 8/33
+- Written: 9/33
 - Read: 0/30
 - Self-tested: 0/30
 - Exercise done: 0/30
@@ -23,7 +23,7 @@
 | 07 | In-context learning | in-context-learning | ✅ | - | - | - | - | - |
 | 08 | Grounding (Citations, RAG) | grounding | ✅ | - | - | - | - | - |
 | 08b | Chain of Thought | chain-of-thought | - | - | - | - | - | - |
-| 09 | Determinism in LLMs | determinism | - | - | - | - | - | - |
+| 09 | Determinism in LLMs | determinism | ✅ | - | - | - | - | - |
 | 10 | Prompt injection | prompt-injection | - | - | - | - | - | - |
 | 11 | Knowledge cutoff | knowledge-cutoff | ✅ | - | - | - | - | - |
 | 12 | Embedding | embedding | ✅ | - | - | - | - | - |
