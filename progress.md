@@ -26,6 +26,7 @@
 | 09 | Determinism in LLMs | determinism | - | - | - | - | - | - |
 | 10 | Prompt injection | prompt-injection | - | - | - | - | - | - |
 | 11 | Knowledge cutoff | knowledge-cutoff | ✅ | - | - | - | - | - |
+| 12 | Embedding | embedding | ✅ | - | - | - | - | - |
 
 ### Claude Code Core (Tuần 3-4) — `blogs/01-claude-code-core/`
 
