@@ -1,8 +1,8 @@
 # Progress: Học Sâu Claude Code
 
 ## Tổng quan
-- Total: 32 keywords
-- Written: 7/32
+- Total: 33 keywords
+- Written: 8/33
 - Read: 0/30
 - Self-tested: 0/30
 - Exercise done: 0/30
@@ -27,6 +27,7 @@
 | 10 | Prompt injection | prompt-injection | - | - | - | - | - | - |
 | 11 | Knowledge cutoff | knowledge-cutoff | ✅ | - | - | - | - | - |
 | 12 | Embedding | embedding | ✅ | - | - | - | - | - |
+| 13 | Vector database | vector-database | ✅ | - | - | - | - | - |
 
 ### Claude Code Core (Tuần 3-4) — `blogs/01-claude-code-core/`
 
