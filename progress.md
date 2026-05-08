@@ -25,6 +25,7 @@
 | 08b | Chain of Thought | chain-of-thought | - | - | - | - | - | - |
 | 09 | Determinism in LLMs | determinism | - | - | - | - | - | - |
 | 10 | Prompt injection | prompt-injection | - | - | - | - | - | - |
+| 11 | Knowledge cutoff | knowledge-cutoff | ✅ | - | - | - | - | - |
 
 ### Claude Code Core (Tuần 3-4) — `blogs/01-claude-code-core/`
 
